@@ -469,6 +469,17 @@ if ($s2hex<>0) sg($objname.".S1hex",$s2hex);
 */
  function uninstall() {
   SQLExec('DROP TABLE IF EXISTS milur_devices');
+  SQLExec('DROP TABLE IF EXISTS milur_config');
+  SQLExec('delete from settings where NAME like "%APPMILUR%"');
+
+SQLExec("delete from pvalues where property_id in (select id FROM properties where object_id in (select id from objects where class_id = (select id from classes where title = 'Milur')))");
+SQLExec("delete from properties where object_id in (select id from objects where class_id = (select id from classes where title = 'Milur'))");
+SQLExec("delete from objects where class_id = (select id from classes where title = 'Milur')");
+SQLExec("delete from methods where class_id = (select id from classes where title = 'Milur')");	 
+SQLExec("delete from classes where title = 'Milur'");	 
+
+
+
   parent::uninstall();
  }
 /**
@@ -544,7 +555,7 @@ sg($objn.".tarif",  $tarif);
 setGlobal('cycle_milurAutoRestart','1');	 	 
 $classname='Milur';
 addClass($classname); 
-addClassMethod($classname,'onChange',$onChange);	 
+addClassMethod($classname,'OnChange',$onChange);	 
 
 $prop_id=addClassProperty($classname, 'I', 30);
 if ($prop_id) {
