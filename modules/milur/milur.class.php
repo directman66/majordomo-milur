@@ -253,7 +253,7 @@ SQLexec("update milur_config set value=now() where parametr='LASTCYCLE_TXT'");
 
 
  function getdata() {
-
+/*
 
 $host= SETTINGS_APPMILUR_IP;
 $port= SETTINGS_APPMILUR_PORT;;
@@ -421,7 +421,7 @@ if ($s2hex<>0) sg($objname.".S1hex",$s2hex);
         }
         socket_close($socket);  // Close Socket
 
-
+*/
 
  }
 
