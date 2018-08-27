@@ -133,28 +133,23 @@ function admin(&$out) {
  $this->getConfig();
  $out['MODEL']=SETTINGS_APPMILUR_MODEL;		
 
- $out['P']=gg(SETTINGS_APPMILUR_MODEL."P");		
- $out['U']=gg(SETTINGS_APPMILUR_MODEL."U");		
- $out['I']=gg(SETTINGS_APPMILUR_MODEL."I");		
+ $out['TS']=date('m/d/Y H:i:s',gg(SETTINGS_APPMILUR_MODEL.".timestamp"));		
+ $out['P']=gg(SETTINGS_APPMILUR_MODEL.".P");		
+ $out['U']=gg(SETTINGS_APPMILUR_MODEL.".U");		
+ $out['I']=gg(SETTINGS_APPMILUR_MODEL.".I");		
+
+
+
+ $out['S0']=gg(SETTINGS_APPMILUR_MODEL.".S0");		
+ $out['S1']=gg(SETTINGS_APPMILUR_MODEL.".S1");		
+ $out['S2']=gg(SETTINGS_APPMILUR_MODEL.".S2");		
+
 
 $cmd_rec = SQLSelectOne("SELECT VALUE FROM milur_config where parametr='DEBUG'");
 $out['MSG_DEBUG']=$cmd_rec['VALUE'];
 
 
 
-
- if ($this->view_mode=='update_settings') {
-   global $api_url;
-   $this->config['API_URL']=$api_url;
-   global $api_key;
-   $this->config['API_KEY']=$api_key;
-   global $api_username;
-   $this->config['API_USERNAME']=$api_username;
-   global $api_password;
-   $this->config['API_PASSWORD']=$api_password;
-   $this->saveConfig();
-   $this->redirect("?");
- }
  if ($this->view_mode=='get') {
 setGlobal('cycle_milurControl','start'); 
 $this->getdata();
@@ -213,9 +208,9 @@ function checkSettings() {
 	  
 ,array(	  
 'NAME'=>'APPMILUR_INTERVAL', 
-    'TITLE'=>'Interval (sec >= 5sec):', 
+    'TITLE'=>'Interval (min):', 
     'TYPE'=>'text',
-    'DEFAULT'=>'20'
+    'DEFAULT'=>'5'
     )
 ,   array(
     'NAME'=>'APPMILUR_ENABLE', 
@@ -258,21 +253,19 @@ function checkSettings() {
  function processCycle() {
 
    $this->getConfig();
-   $every=$this->config['EVERY'];
-   $tdev = time()-$this->config['LATEST_UPDATE'];
+//   $every=$this->config['EVERY'];
+ $every=SETTINGS_APPMILUR_EVERY;
+
+$cmd_rec = SQLSelectOne("SELECT VALUE FROM milur_config where parametr='LASTCYCLE_TS'");
+$latest=$cmd_rec['VALUE'];
+
+   $tdev = time()-$latest;
    $has = $tdev>$every*60;
-   if ($tdev < 0) {
-		$has = true;
-   }
+   if ($tdev < 0) {$has = true;}
    
    if ($has) {  
 $this->getdata();   
-
-		 
-	$this->config['LATEST_UPDATE']=time();
-	//$this->saveConfig();
-
-   } 
+  } 
   }
 
 
