@@ -8,6 +8,7 @@
 */
 //
 //
+//ini_set('max_execution_time', '600');
 class milur extends module {
 /**
 * milur
@@ -251,6 +252,7 @@ function checkSettings() {
 }
 
  function processCycle() {
+
    $this->getConfig();
    $every=$this->config['EVERY'];
    $tdev = time()-$this->config['LATEST_UPDATE'];
@@ -271,12 +273,14 @@ $this->getdata();
 
 
  function getdata() {
+
+$enabledebug=SETTINGS_APPMILUR_ENABLEDEBUG;
 SQLexec("update milur_config set value='' where parametr='DEBUG'");	    
 
 if ($enabledebug==1) {$debug=date('m/d/Y H:i:s', time())."<br>";}
 
 $host= SETTINGS_APPMILUR_IP;
-$port= SETTINGS_APPMILUR_PORT;;
+$port= SETTINGS_APPMILUR_PORT;
    $socket = socket_create(AF_INET, SOCK_STREAM, getprotobyname("tcp"));  // Create Socket
         if (socket_connect($socket, $host, $port)) {  //Connect
 
@@ -285,7 +289,7 @@ if ($enabledebug==1) {$debug.='Socket сonnected '.$host.'('. $port.')<br>';}
 
 //$objname='current';         
 $objname=SETTINGS_APPMILUR_MODEL;
-$enabledebug=SETTINGS_APPMILUR_ENABLEDEBUG;
+
 addClassObject('Milur',$objname);
 sg($objname.".lasttimestamp",gg($objname.".timestamp"));                    
          
@@ -304,8 +308,8 @@ sg($objname.".lasttimestamp",gg($objname.".timestamp"));
 if ($enabledebug==1) {
 $debug.="cicle 1<br>";
 $debug.=" send:".$sendStr."<br>" ; 
-$debug.=" answer:" . $receiveStr."<br>";   
-$debug.=" answerSTR:" .hex2str($receiveStrHex)."<br>";
+//$debug.=" answer:" . $receiveStr."<br>";   
+//$debug.=" answerSTR:" .hex2str($receiveStrHex)."<br>";
 $debug.=" answerHEX:" . $receiveStrHex.'<br>';
 }
 //echo $debug;
@@ -327,14 +331,14 @@ $debug.=" answerHEX:" . $receiveStrHex.'<br>';
 if ($enabledebug==1) {
 $debug.="cicle 2<br>";
 $debug.="send:".$sendStr ."<br>"; 
-$debug.="answer:" . $receiveStr."<br>";   
-$debug.="answerSTR:" .hex2str($receiveStrHex)."<br>";
+//$debug.="answer:" . $receiveStr."<br>";   
+//$debug.="answerSTR:" .hex2str($receiveStrHex)."<br>";
 $debug.="answerHEX:" . $receiveStrHex.'<br>';
 }
 
 if ($receiveStr<>0)        sg($objname.".model",$receiveStr);  
 if ($receiveStr<>0) sg($objname.".timestamp",time());            
-/* 
+ 
          //цикл 3
         $sendStr = 'ff 01 03 00 61';  // P
         $sendStrArray = str_split(str_replace(' ', '', $sendStr), 2);  // The 16 binary data into a set of two arrays
@@ -348,12 +352,16 @@ if ($receiveStr<>0) sg($objname.".timestamp",time());
         
 $phex=substr($receiveStrHex,12,2).substr($receiveStrHex,10,2).substr($receiveStrHex,8,2);
 $p=hexdec($phex)/1000;          
-//         echo  "P:".$sendStr ; 
-//         echo " answer:" . $receiveStr;   
-//         echo " answerSTR:" .hex2str($receiveStrHex);
-//         echo " answerHEX:" . $receiveStrHex;
-//  echo " answerPHEX:" . $phex;   
-//          echo " answerP:" . $p.'<br>';
+
+if ($enabledebug==1) {
+$debug.="cicle 3<br>";
+$debug.=     "P:".$sendStr .'<br>'; 
+//$debug.=    " answer:" . $receiveStr;   
+//$debug.=    " answerSTR:" .hex2str($receiveStrHex);
+$debug.=    " answerHEX:" . $receiveStrHex.'<br>';
+$debug.=    " answerPHEX:" . $phex.'<br>';   
+$debug.=    " answerP:" . $p.'<br>';
+}
           if ($p<>0)       sg($objname.".P",round($p));
           if ($p<>0) sg($objname.".timestamp",time());                     
 
@@ -372,12 +380,16 @@ $p=hexdec($phex)/1000;
        
 $uhex=substr($receiveStrHex,12,2).substr($receiveStrHex,10,2).substr($receiveStrHex,8,2);
 $u=hexdec($uhex)/1000;       
-$debug.=   "U:".$sendStr ; 
-$debug.=" answer:" . $receiveStr;   
-$debug.=" answerSTR:" .hex2str($receiveStrHex);
-$debug.=" answerHEX:" . $receiveStrHex;    
-$debug.=" answerUHEX:" . $uhex;   
-$debug.=" answerU:" . $u.'<br>'; 
+
+if ($enabledebug==1) {
+$debug.="cicle 4<br>";
+$debug.=   "U:".$sendStr.'<br>' ; 
+//$debug.=" answer:" . $receiveStr;   
+//$debug.=" answerSTR:" .hex2str($receiveStrHex);
+$debug.=" answerHEX:" . $receiveStrHex.'<br>';    
+$debug.=" answerUHEX:" . $uhex.'<br>';   
+$debug.=" answerU:" . $u.'<br>.'<br>''; 
+}
             if ($u<>0)    sg($objname.".U",round($u));        
 
          //цикл 5 счетчик общий
@@ -395,12 +407,15 @@ $s0hex=substr($receiveStrHex,12,2).substr($receiveStrHex,10,2).substr($receiveSt
 $s0=hexdec($s0hex)/1000;       
 $sk0=$s0*0.00027777777777778;         
  echo  "S0:".$sendStr ; 
-$debug.= " answer:" . $receiveStr;   
-$debug.= " answerSTR:" .hex2str($receiveStrHex);
-$debug.= " answerHEX:" . $receiveStrHex;    
-$debug.= " answerS0HEX:" . $s1hex;   
-$debug.= " answerS0:" . $s0;
-$debug.= " answerSK0:" . $sk0;                  
+if ($enabledebug==1) {
+$debug.="cicle 5<br>";
+//$debug.= " answer:" . $receiveStr;   
+//$debug.= " answerSTR:" .hex2str($receiveStrHex);
+$debug.= " answerHEX:" . $receiveStrHex.'<br>';    
+$debug.= " answerS0HEX:" . $s1hex.'<br>';   
+$debug.= " answerS0:" . $s0.'<br>';
+$debug.= " answerSK0:" . $sk0.'<br>';                  
+}
 //           echo '<br>'; 
             if ($s0<>0)    sg($objname.".S0",$s0);
          
@@ -418,13 +433,16 @@ $debug.= " answerSK0:" . $sk0;
 $s1hex=substr($receiveStrHex,12,2).substr($receiveStrHex,10,2).substr($receiveStrHex,8,2);
 $s1=hexdec($s1hex)/1000;       
 $sk1=$s1*0.00027777777777778;         
- echo  "S1:".$sendStr ; 
-$debug.= " answer:" . $receiveStr;   
-$debug.= " answerSTR:" .hex2str($receiveStrHex);
-$debug.= " answerHEX:" . $receiveStrHex;    
-$debug.= " answerS1HEX:" . $s1hex;   
-$debug.= " answerS1:" . $s1;
-$debug.= " answerSK1:" . $sk1;                  
+// echo  "S1:".$sendStr ; 
+if ($enabledebug==1) {
+$debug.="cicle 6.1<br>";
+//$debug.= " answer:" . $receiveStr;   
+//$debug.= " answerSTR:" .hex2str($receiveStrHex);
+$debug.= " answerHEX:" . $receiveStrHex.'<br>';    
+$debug.= " answerS1HEX:" . $s1hex.'<br>';   
+$debug.= " answerS1:" . $s1.'<br>';
+$debug.= " answerSK1:" . $sk1.'<br>';                  
+}
 //echo           '<br>'; 
 if ($s1<>0)    sg($objname.".S1",$s1);         
 if ($s1hex<>0)    sg($objname."S1hex",$s1hex);          
@@ -443,17 +461,20 @@ if ($s1hex<>0)    sg($objname."S1hex",$s1hex);
 $s2hex=substr($receiveStrHex,12,2).substr($receiveStrHex,10,2).substr($receiveStrHex,8,2);
 $s2=hexdec($s2hex)/1000;       
 $sk2=$s2*0.00027777777777778;
- echo  "S2:".$sendStr ; 
-$debug.= " answer:" . $receiveStr;   
-$debug.= " answerSTR:" .hex2str($receiveStrHex);
-$debug.= " answerHEX:" . $receiveStrHex;    
-$debug.= " answerS2HEX:" . $s2hex;   
-$debug.= " answerS2:" . $s2;
-$debug.= " answerSK2:" . $sk2;         
+// echo  "S2:".$sendStr ; 
+if ($enabledebug==1) {
+$debug.="cicle 6.2<br>";
+//$debug.= " answer:" . $receiveStr;   
+//$debug.= " answerSTR:" .hex2str($receiveStrHex);
+$debug.= " answerHEX:" . $receiveStrHex.'<br>';    
+$debug.= " answerS2HEX:" . $s2hex.'<br>';   
+$debug.= " answerS2:" . $s2.'<br>';
+$debug.= " answerSK2:" . $sk2.'<br>';         
+}
 //echo '<br>'; 
 if ($s2<>0)    sg($objname.".S2",$s2);                  
 if ($s2hex<>0) sg($objname.".S1hex",$s2hex);            
-*/
+
 
         socket_close($socket);  // Close Socket       
 if ($enabledebug==1) {$debug.='Socked closed.<br>';}
