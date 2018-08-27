@@ -473,9 +473,110 @@ if ($s2hex<>0) sg($objname.".S1hex",$s2hex);
 */
  function dbInstall($data = '') {
 
+$onChange='
+
+$objn=$this->object_title;
+
+$i=gg($objn.".P")/gg($objn.".U");
+sg($objn.".I",  round($i,2));
+SQLUpdate("objects", array("ID"=>$this->id, "DESCRIPTION"=>gg("sysdate")." ".gg("timenow"))); 
+
+
+//расчет потребленного электричества с момента последней проверки
+//получаем дату предыдущей проверки
+//$laststamp=getHistoryValue($this->getProperty("timestamp"),);
+$t1=gg($objn.".t1");
+$t2=gg($objn.".t2");
+$laststamp=gg($objn.".lasttimestamp");
+$diff=(gmdate("i",trim(time()-$laststamp)));
+$pattern = "|\b[0]+([1-9][\d]*)|is"; 
+$diff2= preg_replace($pattern, "\\1", $diff); 
+sg($objn.".proshlo_min",  $diff2);
+
+
+//получаем последннее значение мощности
+//$lastph=getHistoryMax($this->getProperty("P"));
+//$lastph=getHistoryMax("current.P");
+$lastph=getHistoryValue($objn.".P", $laststamp-1,$laststamp+1);
+//переведем в ват в мин
+$lastpm=$lastph*0.0166667;
+ //за последний период в минутах было потреблено ватт
+$potrebleno=$lastpm*$diff2;
+sg($objn.".potrebleno_w",  $potrebleno);
+sg($objn.".lastph",  $lastph);
+sg($objn.".lastpm",  $lastpm);
+$time=date("H:i:s");
+
+
+$date_min = new DateTime("7:00"); // минимальное значение времени
+$date_max = new DateTime("23:00"); // максимальное значение времени
+$date_now = new DateTime($date); // текущее значение времени
+// Проверяем, находится ли $date_now в диапазоне
+if ($date_now >= $date_min && $date_now <= $date_max) 
+{$tarif=1; 
+sg($objn.".potrebleno_w_t1",  $potrebleno);
+sg($objn.".potrebleno_w_t1_sum",  gg($objn.".potrebleno_w_t1_sum")+$potrebleno); 
+//$st=$t1/16.6667;
+ $st=$t1/1000;
+sg($objn.".potrebleno_w_t1_rub",  $potrebleno*$st);
+sg($objn.".potrebleno_w_rub",  $potrebleno*$st); 
+} else
+{$tarif=2;
+sg($objn.".potrebleno_w_t2",  $potrebleno);
+sg($objn.".potrebleno_w_t2_sum",  gg($objn.".potrebleno_w_t2_sum")+$potrebleno);  
+//$st=$t2/16.6667;
+ $st=$t2/1000;
+sg($objn.".potrebleno_w_t2_rub",  $potrebleno*$st);
+sg($objn.".potrebleno_w_rub",  $potrebleno*$st);
+ 
+}
+sg($objn.".tarif",  $tarif);
+
+';
+
 setGlobal('cycle_milurAutoRestart','1');	 	 
 $classname='Milur';
 addClass($classname); 
+addClassMethod($classname,'onChange',$onChange);	 
+
+$prop_id=addClassProperty($classname, 'I', 30);
+if ($prop_id) {
+$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
+$property['DESCRIPTION']='Сила тока'; //   <-----------
+SQLUpdate('properties',$property);} 
+
+
+$prop_id=addClassProperty($classname, 'P', 30);
+if ($prop_id) {
+$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
+$property['DESCRIPTION']='Мгновенная потребляемая мощность'; //   <-----------
+SQLUpdate('properties',$property);} 
+
+$prop_id=addClassProperty($classname, 'S1', 30);
+if ($prop_id) {
+$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
+$property['DESCRIPTION']='Значение счеткика тариф 1'; //   <-----------
+SQLUpdate('properties',$property);} 
+
+$prop_id=addClassProperty($classname, 'S2', 30);
+if ($prop_id) {
+$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
+$property['DESCRIPTION']='Значение счеткика тариф 2'; //   <-----------
+SQLUpdate('properties',$property);} 
+
+$prop_id=addClassProperty($classname, 'timestamp', 30);
+if ($prop_id) {
+$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
+$property['DESCRIPTION']='timestamp'; //   <-----------
+SQLUpdate('properties',$property);} 
+
+$prop_id=addClassProperty($classname, 'U', 30);
+if ($prop_id) {
+$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
+$property['DESCRIPTION']='Мгновенное напряжение'; //   <-----------
+$property['ONCHANGE']="OnChange"; //	   	       
+SQLUpdate('properties',$property);} 
+
 
 /*
 milur_devices - 
