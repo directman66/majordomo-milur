@@ -653,6 +653,56 @@ $property['DESCRIPTION']='Мгновенное напряжение'; //   <----
 $property['ONCHANGE']="OnChange"; //	   	       
 SQLUpdate('properties',$property);} 
 
+$prop_id=addClassProperty($classname, 'potrebleno_w', 90);
+if ($prop_id) {
+$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
+$property['DESCRIPTION']='Потреблено ват всего'; //   <-----------
+$property['ONCHANGE']=""; //	   	       
+SQLUpdate('properties',$property);} 
+
+$prop_id=addClassProperty($classname, 'potrebleno_w_rub', 90);
+if ($prop_id) {
+$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
+$property['DESCRIPTION']='Израсходовано руб.'; //   <-----------
+$property['ONCHANGE']=""; //	   	       
+SQLUpdate('properties',$property);} 
+
+$prop_id=addClassProperty($classname, 'potrebleno_w_t1', 30);
+if ($prop_id) {
+$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
+$property['DESCRIPTION']='потреблено по тарифу 1'; //   <-----------
+$property['ONCHANGE']=""; //	   	       
+SQLUpdate('properties',$property);} 
+
+$prop_id=addClassProperty($classname, 'potrebleno_w_t2', 30);
+if ($prop_id) {
+$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
+$property['DESCRIPTION']='потреблено по тарифу 2'; //   <-----------
+$property['ONCHANGE']=""; //	   	       
+SQLUpdate('properties',$property);} 
+
+$prop_id=addClassProperty($classname, 'potrebleno_w_t1_rub', 100);
+if ($prop_id) {
+$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
+$property['DESCRIPTION']='Израсходовано по тарифу 1'; //   <-----------
+$property['ONCHANGE']=""; //	   	       
+SQLUpdate('properties',$property);} 
+
+$prop_id=addClassProperty($classname, 'potrebleno_w_t2_rub', 100);
+if ($prop_id) {
+$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
+$property['DESCRIPTION']='Израсходовано по тарифу 2'; //   <-----------
+$property['ONCHANGE']=""; //	   	       
+SQLUpdate('properties',$property);} 
+
+$prop_id=addClassProperty($classname, 'proshlo_min', 100);
+if ($prop_id) {
+$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
+$property['DESCRIPTION']='Отрезок времени в мин с последнего снятия показаний'; //   <-----------
+$property['ONCHANGE']=""; //	   	       
+SQLUpdate('properties',$property);} 
+
+
 
 /*
 milur_devices - 
