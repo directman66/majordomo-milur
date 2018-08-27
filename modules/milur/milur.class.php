@@ -141,10 +141,10 @@ function admin(&$out) {
 setGlobal('cycle_yandexweatherControl','start'); 
 		$this->getdata();
  
-  
-  
+}  
+}  
  
-  }
+  
  
 
 /**
@@ -253,14 +253,14 @@ SQLexec("update milur_config set value=now() where parametr='LASTCYCLE_TXT'");
 
 
  function getdata() {
-/*
+
 
 $host= SETTINGS_APPMILUR_IP;
 $port= SETTINGS_APPMILUR_PORT;;
    $socket = socket_create(AF_INET, SOCK_STREAM, getprotobyname("tcp"));  // Create Socket
         if (socket_connect($socket, $host, $port)) {  //Connect
-         
-sg("current.lasttimestamp",gg("current.timestamp"));                    
+$objname='current';         
+sg($objname.".lasttimestamp",gg($objname.".timestamp"));                    
          
          
 //circle 1
@@ -287,16 +287,18 @@ sg("current.lasttimestamp",gg("current.timestamp"));
                       for ($j = 0; $j <count ($sendStrArray); $j++) {
                               socket_write ($socket, Chr (hexdec ($sendStrArray[$j])));   // by group data transmission
             }
+
             $receiveStr = "";
             $receiveStr = socket_read($socket, 1024, PHP_BINARY_READ);  // The 2 band data received 
                       $receiveStrHex = bin2hex ($receiveStr);   // the 2 hexadecimal data convert 16 hex
+
 //         echo  "send:".$sendStr ; 
 //         echo " answer:" . $receiveStr;   
 //         echo " answerSTR:" .hex2str($receiveStrHex);
 //         echo " answerHEX:" . $receiveStrHex.'<br>';
-$objname='current';
+
 if ($receiveStr<>0)        sg($objname.".model",$receiveStr);  
-if ($receiveStr<>0) sg($objname".timestamp",time());            
+if ($receiveStr<>0) sg($objname.".timestamp",time());            
  
          //цикл 3
         $sendStr = 'ff 01 03 00 61';  // P
@@ -421,7 +423,7 @@ if ($s2hex<>0) sg($objname.".S1hex",$s2hex);
         }
         socket_close($socket);  // Close Socket
 
-*/
+
 
  }
 
