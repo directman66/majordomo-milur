@@ -152,8 +152,8 @@ $out['MSG_DEBUG']=$cmd_rec['VALUE'];
  }
  if ($this->view_mode=='get') {
 setGlobal('cycle_milurControl','start'); 
-		$this->getdata();
- 
+$this->getdata();
+//echo "start"; 
 }  
 }  
  
@@ -258,21 +258,24 @@ $this->getdata();
 		 
 	$this->config['LATEST_UPDATE']=time();
 	//$this->saveConfig();
-SQLexec("update milur_config set value=UNIX_TIMESTAMP() where parametr='LASTCYCLE_TS'");		   
-SQLexec("update milur_config set value=now() where parametr='LASTCYCLE_TXT'");		   	   
 
    } 
   }
 
 
  function getdata() {
+SQLexec("update milur_config set value='' where parametr='DEBUG'");	    
 
-
+$debug=date('m/d/Y H:i:s', time())."<br>";
 
 $host= SETTINGS_APPMILUR_IP;
 $port= SETTINGS_APPMILUR_PORT;;
    $socket = socket_create(AF_INET, SOCK_STREAM, getprotobyname("tcp"));  // Create Socket
         if (socket_connect($socket, $host, $port)) {  //Connect
+
+$debug.='Socket сonnected '.$host.'('. $port.')<br>';
+
+
 //$objname='current';         
 $objname=SETTINGS_APPMILUR_MODEL;
 addClassObject('Milur',$objname);
@@ -289,16 +292,18 @@ sg($objname.".lasttimestamp",gg($objname.".timestamp"));
             $receiveStr = "";
             $receiveStr = socket_read($socket, 1024, PHP_BINARY_READ);  // The 2 band data received 
                       $receiveStrHex = bin2hex ($receiveStr);   // the 2 hexadecimal data convert 16 hex
-//$debug="cicle 1<br>";
-//$debug.=" send:".$sendStr."<br>" ; 
-//$debug.=" answer:" . $receiveStr."<br>";   
-//$debug.=" answerSTR:" .hex2str($receiveStrHex)."<br>";
-//$debug.=" answerHEX:" . $receiveStrHex.'<br>';
+
+$debug.="cicle 1<br>";
+$debug.=" send:".$sendStr."<br>" ; 
+$debug.=" answer:" . $receiveStr."<br>";   
+$debug.=" answerSTR:" .hex2str($receiveStrHex)."<br>";
+$debug.=" answerHEX:" . $receiveStrHex.'<br>';
+//echo $debug;
 
 
          
-         //цикл 2
-         
+       //цикл 2
+/*         
         $sendStr = 'ff 01 20 41 b8';  // модель
         $sendStrArray = str_split(str_replace(' ', '', $sendStr), 2);  // The 16 binary data into a set of two arrays
      
@@ -310,14 +315,14 @@ sg($objname.".lasttimestamp",gg($objname.".timestamp"));
             $receiveStr = socket_read($socket, 1024, PHP_BINARY_READ);  // The 2 band data received 
                       $receiveStrHex = bin2hex ($receiveStr);   // the 2 hexadecimal data convert 16 hex
 
-//         echo  "send:".$sendStr ; 
-//         echo " answer:" . $receiveStr;   
-//         echo " answerSTR:" .hex2str($receiveStrHex);
-//         echo " answerHEX:" . $receiveStrHex.'<br>';
+$debug.="send:".$sendStr ; 
+$debug.=" answer:" . $receiveStr;   
+$debug.=" answerSTR:" .hex2str($receiveStrHex);
+$debug.=" answerHEX:" . $receiveStrHex.'<br>';
 
 if ($receiveStr<>0)        sg($objname.".model",$receiveStr);  
 if ($receiveStr<>0) sg($objname.".timestamp",time());            
- 
+/* 
          //цикл 3
         $sendStr = 'ff 01 03 00 61';  // P
         $sendStrArray = str_split(str_replace(' ', '', $sendStr), 2);  // The 16 binary data into a set of two arrays
@@ -355,12 +360,12 @@ $p=hexdec($phex)/1000;
        
 $uhex=substr($receiveStrHex,12,2).substr($receiveStrHex,10,2).substr($receiveStrHex,8,2);
 $u=hexdec($uhex)/1000;       
-// echo  "U:".$sendStr ; 
-//         echo " answer:" . $receiveStr;   
-//         echo " answerSTR:" .hex2str($receiveStrHex);
-//         echo " answerHEX:" . $receiveStrHex;    
-//      echo " answerUHEX:" . $uhex;   
-//          echo " answerU:" . $u.'<br>'; 
+$debug.=   "U:".$sendStr ; 
+$debug.=" answer:" . $receiveStr;   
+$debug.=" answerSTR:" .hex2str($receiveStrHex);
+$debug.=" answerHEX:" . $receiveStrHex;    
+$debug.=" answerUHEX:" . $uhex;   
+$debug.=" answerU:" . $u.'<br>'; 
             if ($u<>0)    sg($objname.".U",round($u));        
 
          //цикл 5 счетчик общий
@@ -378,12 +383,12 @@ $s0hex=substr($receiveStrHex,12,2).substr($receiveStrHex,10,2).substr($receiveSt
 $s0=hexdec($s0hex)/1000;       
 $sk0=$s0*0.00027777777777778;         
  echo  "S0:".$sendStr ; 
-//         echo " answer:" . $receiveStr;   
-//         echo " answerSTR:" .hex2str($receiveStrHex);
-//         echo " answerHEX:" . $receiveStrHex;    
-//      echo " answerS0HEX:" . $s1hex;   
-//          echo " answerS0:" . $s0;
-//echo " answerSK0:" . $sk0;                  
+$debug.= " answer:" . $receiveStr;   
+$debug.= " answerSTR:" .hex2str($receiveStrHex);
+$debug.= " answerHEX:" . $receiveStrHex;    
+$debug.= " answerS0HEX:" . $s1hex;   
+$debug.= " answerS0:" . $s0;
+$debug.= " answerSK0:" . $sk0;                  
 //           echo '<br>'; 
             if ($s0<>0)    sg($objname.".S0",$s0);
          
@@ -402,12 +407,12 @@ $s1hex=substr($receiveStrHex,12,2).substr($receiveStrHex,10,2).substr($receiveSt
 $s1=hexdec($s1hex)/1000;       
 $sk1=$s1*0.00027777777777778;         
  echo  "S1:".$sendStr ; 
-//         echo " answer:" . $receiveStr;   
-//         echo " answerSTR:" .hex2str($receiveStrHex);
-//         echo " answerHEX:" . $receiveStrHex;    
-//      echo " answerS1HEX:" . $s1hex;   
-//          echo " answerS1:" . $s1;
-//echo " answerSK1:" . $sk1;                  
+$debug.= " answer:" . $receiveStr;   
+$debug.= " answerSTR:" .hex2str($receiveStrHex);
+$debug.= " answerHEX:" . $receiveStrHex;    
+$debug.= " answerS1HEX:" . $s1hex;   
+$debug.= " answerS1:" . $s1;
+$debug.= " answerSK1:" . $sk1;                  
 //echo           '<br>'; 
 if ($s1<>0)    sg($objname.".S1",$s1);         
 if ($s1hex<>0)    sg($objname."S1hex",$s1hex);          
@@ -427,21 +432,32 @@ $s2hex=substr($receiveStrHex,12,2).substr($receiveStrHex,10,2).substr($receiveSt
 $s2=hexdec($s2hex)/1000;       
 $sk2=$s2*0.00027777777777778;
  echo  "S2:".$sendStr ; 
-//         echo " answer:" . $receiveStr;   
-//         echo " answerSTR:" .hex2str($receiveStrHex);
-//         echo " answerHEX:" . $receiveStrHex;    
-//      echo " answerS2HEX:" . $s2hex;   
-//          echo " answerS2:" . $s2;
-//echo " answerSK2:" . $sk2;         
+$debug.= " answer:" . $receiveStr;   
+$debug.= " answerSTR:" .hex2str($receiveStrHex);
+$debug.= " answerHEX:" . $receiveStrHex;    
+$debug.= " answerS2HEX:" . $s2hex;   
+$debug.= " answerS2:" . $s2;
+$debug.= " answerSK2:" . $sk2;         
 //echo '<br>'; 
 if ($s2<>0)    sg($objname.".S2",$s2);                  
-if ($s2hex<>0) sg($objname.".S1hex",$s2hex);                   
-//SQLexec("update milur_config set value='$debug' where parametr='DEBUG'");	    
-         
-        }
-        socket_close($socket);  // Close Socket
+if ($s2hex<>0) sg($objname.".S1hex",$s2hex);            
+*/
+
+        socket_close($socket);  // Close Socket       
+$debug.='Socked closed.<br>';
 
 
+        } 
+else 
+{$debug='Error create socket '.$host.'('. $port.')';}
+     socket_close($socket);  // Close Socket       
+SQLexec("update milur_config set value='$debug' where parametr='DEBUG'");	    
+sg($objname.'.debug',$debug);
+
+
+
+SQLexec("update milur_config set value=UNIX_TIMESTAMP() where parametr='LASTCYCLE_TS'");		   
+SQLexec("update milur_config set value=now() where parametr='LASTCYCLE_TXT'");		   	   
 
  }
 
@@ -618,7 +634,7 @@ EOD;
 
   $data = <<<EOD
  milur_config: parametr varchar(300)
- milur_config: value varchar(100)  
+ milur_config: value varchar(10000)  
 EOD;
    parent::dbInstall($data);
 
@@ -637,11 +653,12 @@ $par['value'] = "0";
 SQLInsert('milur_config', $par);						
 
 $par['parametr'] = 'DEBUG';
-$par['value'] = "0";		 
+$par['value'] = "";		 
 SQLInsert('milur_config', $par);						
 
 
  }
+}
 // --------------------------------------------------------------------
 	
 
@@ -667,7 +684,7 @@ function hex2str($hex) {
     for($i=0;$i<strlen($hex);$i+=2) $str .= chr(hexdec(substr($hex,$i,2)));
     return $str;
 }	
-}
+
 /*
 *
 * TW9kdWxlIGNyZWF0ZWQgSmFuIDAzLCAyMDE4IHVzaW5nIFNlcmdlIEouIHdpemFyZCAoQWN0aXZlVW5pdCBJbmMgd3d3LmFjdGl2ZXVuaXQuY29tKQ==
