@@ -135,16 +135,13 @@ function admin(&$out) {
    $this->saveConfig();
    $this->redirect("?");
  }
- if (isset($this->data_source) && !$_GET['data_source'] && !$_POST['data_source']) {
-  $out['SET_DATASOURCE']=1;
- }
  
   
   
-   $this->redirect("?");
+ 
   }
- }
-}
+ 
+
 /**
 * FrontEnd
 *
