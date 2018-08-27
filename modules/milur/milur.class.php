@@ -102,6 +102,13 @@ function run() {
   $out['TAB']=$this->tab;
   $this->data=$out;
   $this->checkSettings();
+
+        if ((time() - gg('cycle_milurRun')) < 360*2 ) {
+			$out['CYCLERUN'] = 1;
+		} else {
+			$out['CYCLERUN'] = 0;
+		}
+
 $out['MODEL']=SETTINGS_APPMILUR_MODEL;
   $p=new parser(DIR_TEMPLATES.$this->name."/".$this->name.".html", $this->data, $this);
   $this->result=$p->result;
