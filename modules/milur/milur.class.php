@@ -145,7 +145,7 @@ function admin(&$out) {
    $this->redirect("?");
  }
  if ($this->view_mode=='get') {
-setGlobal('cycle_yandexweatherControl','start'); 
+setGlobal('cycle_milurControl','start'); 
 		$this->getdata();
  
 }  
