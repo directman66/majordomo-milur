@@ -102,6 +102,7 @@ function run() {
   $out['TAB']=$this->tab;
   $this->data=$out;
   $this->checkSettings();
+$out['MODEL']=SETTINGS_APPMILUR_MODEL;
   $p=new parser(DIR_TEMPLATES.$this->name."/".$this->name.".html", $this->data, $this);
   $this->result=$p->result;
 }
@@ -157,9 +158,7 @@ function usual(&$out) {
 *
 * @access public
 */
- function search_milur_devices(&$out) {
-  require(DIR_MODULES.$this->name.'/milur_devices_search.inc.php');
- }
+ 
 
 
 
