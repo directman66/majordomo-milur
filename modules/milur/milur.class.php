@@ -136,6 +136,9 @@ function admin(&$out) {
    $this->saveConfig();
    $this->redirect("?");
  }
+ if ($this->view_mode=='get') {
+setGlobal('cycle_yandexweatherControl','start'); 
+		$this->getdata();
  
   
   
@@ -236,7 +239,7 @@ function checkSettings() {
    }
    
    if ($has) {  
-//$this->getdatefnc();   
+$this->getdata();   
 
 		 
 	$this->config['LATEST_UPDATE']=time();
@@ -250,7 +253,7 @@ SQLexec("update milur_config set value=now() where parametr='LASTCYCLE_TXT'");
 
  function getdata() {
 
-/*
+
 $host= SETTINGS_APPMILUR_IP;
 $port= SETTINGS_APPMILUR_PORT;;
    $socket = socket_create(AF_INET, SOCK_STREAM, getprotobyname("tcp"));  // Create Socket
@@ -417,7 +420,7 @@ if ($s2hex<>0) sg($objname.".S1hex",$s2hex);
         }
         socket_close($socket);  // Close Socket
 
-*/
+
 
  }
 
