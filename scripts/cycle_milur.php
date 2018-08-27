@@ -18,7 +18,7 @@ $checkEvery=$cmd_rec['VALUE']*60;
  
 echo date("H:i:s") . " running " . basename(__FILE__) . PHP_EOL;
 $latest_check=0;
-
+sg('milur104.checkcicle', date("H:i:s"));
 while (1)
 {
    setGlobal((str_replace('.php', '', basename(__FILE__))) . 'Run', time(), 1);
@@ -26,6 +26,7 @@ while (1)
     $latest_check=time();
     //echo date('Y-m-d H:i:s').' Polling devices...\n';
     $milur_module->processCycle();
+sg('milur104.runcicle', date("H:i:s"));
    }
    if (file_exists('./reboot') || IsSet($_GET['onetime'])){
       $db->Disconnect();
