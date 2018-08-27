@@ -113,14 +113,16 @@ function run() {
 * @access public
 */
 function admin(&$out) {
+
+
+        if ((time() - gg('cycle_milurRun')) < 360*2 ) {
+			$out['CYCLERUN'] = 1;
+		} else {
+			$out['CYCLERUN'] = 0;
+		}
+
  $this->getConfig();
- $out['API_URL']=$this->config['API_URL'];
- if (!$out['API_URL']) {
-  $out['API_URL']='http://';
- }
- $out['API_KEY']=$this->config['API_KEY'];
- $out['API_USERNAME']=$this->config['API_USERNAME'];
- $out['API_PASSWORD']=$this->config['API_PASSWORD'];
+
  if ($this->view_mode=='update_settings') {
    global $api_url;
    $this->config['API_URL']=$api_url;
@@ -234,6 +236,202 @@ function checkSettings() {
 	
 }
 
+ function processCycle() {
+   $this->getConfig();
+   $every=$this->config['EVERY'];
+   $tdev = time()-$this->config['LATEST_UPDATE'];
+   $has = $tdev>$every*60;
+   if ($tdev < 0) {
+		$has = true;
+   }
+   
+   if ($has) {  
+//$this->getdatefnc();   
+
+		 
+	$this->config['LATEST_UPDATE']=time();
+	//$this->saveConfig();
+SQLexec("update milur_config set value=UNIX_TIMESTAMP() where parametr='LASTCYCLE_TS'");		   
+SQLexec("update milur_config set value=now() where parametr='LASTCYCLE_TXT'");		   	   
+
+   } 
+  }
+
+
+ function getdata() {
+
+
+$host= SETTINGS_APPMILUR_IP;
+$port= SETTINGS_APPMILUR_PORT;;
+   $socket = socket_create(AF_INET, SOCK_STREAM, getprotobyname("tcp"));  // Create Socket
+        if (socket_connect($socket, $host, $port)) {  //Connect
+         
+sg("current.lasttimestamp",gg("current.timestamp"));                    
+         
+         
+//circle 1
+        $sendStr = 'ff 08 00 ff ff ff ff ff ff 4f 2d';  // 16 hexadecimal data
+        $sendStrArray = str_split(str_replace(' ', '', $sendStr), 2);  // The 16 binary data into a set of two arrays
+     
+                      for ($j = 0; $j <count ($sendStrArray); $j++) {
+                              socket_write ($socket, Chr (hexdec ($sendStrArray[$j])));   // by group data transmission
+            }
+            $receiveStr = "";
+            $receiveStr = socket_read($socket, 1024, PHP_BINARY_READ);  // The 2 band data received 
+                      $receiveStrHex = bin2hex ($receiveStr);   // the 2 hexadecimal data convert 16 hex
+//         echo  "send:".$sendStr ; 
+//         echo " answer:" . $receiveStr;   
+//         echo " answerSTR:" .hex2str($receiveStrHex);
+//         echo " answerHEX:" . $receiveStrHex.'<br>';
+   
+         
+         //цикл 2
+         
+        $sendStr = 'ff 01 20 41 b8';  // модель
+        $sendStrArray = str_split(str_replace(' ', '', $sendStr), 2);  // The 16 binary data into a set of two arrays
+     
+                      for ($j = 0; $j <count ($sendStrArray); $j++) {
+                              socket_write ($socket, Chr (hexdec ($sendStrArray[$j])));   // by group data transmission
+            }
+            $receiveStr = "";
+            $receiveStr = socket_read($socket, 1024, PHP_BINARY_READ);  // The 2 band data received 
+                      $receiveStrHex = bin2hex ($receiveStr);   // the 2 hexadecimal data convert 16 hex
+//         echo  "send:".$sendStr ; 
+//         echo " answer:" . $receiveStr;   
+//         echo " answerSTR:" .hex2str($receiveStrHex);
+//         echo " answerHEX:" . $receiveStrHex.'<br>';
+$objname='current';
+if ($receiveStr<>0)        sg($objname.".model",$receiveStr);  
+if ($receiveStr<>0) sg($objname".timestamp",time());            
+ 
+         //цикл 3
+        $sendStr = 'ff 01 03 00 61';  // P
+        $sendStrArray = str_split(str_replace(' ', '', $sendStr), 2);  // The 16 binary data into a set of two arrays
+     
+                      for ($j = 0; $j <count ($sendStrArray); $j++) {
+                              socket_write ($socket, Chr (hexdec ($sendStrArray[$j])));   // by group data transmission
+            }
+            $receiveStr = "";
+            $receiveStr = socket_read($socket, 1024, PHP_BINARY_READ);  // The 2 band data received 
+                      $receiveStrHex = bin2hex ($receiveStr);   // the 2 hexadecimal data convert 16 hex
+        
+$phex=substr($receiveStrHex,12,2).substr($receiveStrHex,10,2).substr($receiveStrHex,8,2);
+$p=hexdec($phex)/1000;          
+//         echo  "P:".$sendStr ; 
+//         echo " answer:" . $receiveStr;   
+//         echo " answerSTR:" .hex2str($receiveStrHex);
+//         echo " answerHEX:" . $receiveStrHex;
+//  echo " answerPHEX:" . $phex;   
+//          echo " answerP:" . $p.'<br>';
+          if ($p<>0)       sg($objname.".P",round($p));
+          if ($p<>0) sg($objname.".timestamp",time());                     
+
+         
+    
+     //цикл 4
+        $sendStr = 'ff 01 01 81 a0 ';  // U
+        $sendStrArray = str_split(str_replace(' ', '', $sendStr), 2);  // The 16 binary data into a set of two arrays
+     
+                      for ($j = 0; $j <count ($sendStrArray); $j++) {
+                              socket_write ($socket, Chr (hexdec ($sendStrArray[$j])));   // by group data transmission
+            }
+            $receiveStr = "";
+            $receiveStr = socket_read($socket, 1024, PHP_BINARY_READ);  // The 2 band data received 
+                      $receiveStrHex = bin2hex ($receiveStr);   // the 2 hexadecimal data convert 16 hex
+       
+$uhex=substr($receiveStrHex,12,2).substr($receiveStrHex,10,2).substr($receiveStrHex,8,2);
+$u=hexdec($uhex)/1000;       
+// echo  "U:".$sendStr ; 
+//         echo " answer:" . $receiveStr;   
+//         echo " answerSTR:" .hex2str($receiveStrHex);
+//         echo " answerHEX:" . $receiveStrHex;    
+//      echo " answerUHEX:" . $uhex;   
+//          echo " answerU:" . $u.'<br>'; 
+            if ($u<>0)    sg($objname.".U",round($u));        
+
+         //цикл 5 счетчик общий
+        $sendStr = 'ff 01 04 41 a3';  // S1
+        $sendStrArray = str_split(str_replace(' ', '', $sendStr), 2);  // The 16 binary data into a set of two arrays
+     
+                      for ($j = 0; $j <count ($sendStrArray); $j++) {
+                              socket_write ($socket, Chr (hexdec ($sendStrArray[$j])));   // by group data transmission
+            }
+            $receiveStr = "";
+            $receiveStr = socket_read($socket, 1024, PHP_BINARY_READ);  // The 2 band data received 
+                      $receiveStrHex = bin2hex ($receiveStr);   // the 2 hexadecimal data convert 16 hex
+       
+$s0hex=substr($receiveStrHex,12,2).substr($receiveStrHex,10,2).substr($receiveStrHex,8,2);
+$s0=hexdec($s0hex)/1000;       
+$sk0=$s0*0.00027777777777778;         
+ echo  "S0:".$sendStr ; 
+//         echo " answer:" . $receiveStr;   
+//         echo " answerSTR:" .hex2str($receiveStrHex);
+//         echo " answerHEX:" . $receiveStrHex;    
+//      echo " answerS0HEX:" . $s1hex;   
+//          echo " answerS0:" . $s0;
+//echo " answerSK0:" . $sk0;                  
+//           echo '<br>'; 
+            if ($s0<>0)    sg($objname.".S0",$s0);
+         
+//цикл 6 счетчик тариф 1
+        $sendStr = 'ff 01 05 80 63';  // S1
+        $sendStrArray = str_split(str_replace(' ', '', $sendStr), 2);  // The 16 binary data into a set of two arrays
+     
+                      for ($j = 0; $j <count ($sendStrArray); $j++) {
+                              socket_write ($socket, Chr (hexdec ($sendStrArray[$j])));   // by group data transmission
+            }
+            $receiveStr = "";
+            $receiveStr = socket_read($socket, 1024, PHP_BINARY_READ);  // The 2 band data received 
+                      $receiveStrHex = bin2hex ($receiveStr);   // the 2 hexadecimal data convert 16 hex
+       
+$s1hex=substr($receiveStrHex,12,2).substr($receiveStrHex,10,2).substr($receiveStrHex,8,2);
+$s1=hexdec($s1hex)/1000;       
+$sk1=$s1*0.00027777777777778;         
+ echo  "S1:".$sendStr ; 
+//         echo " answer:" . $receiveStr;   
+//         echo " answerSTR:" .hex2str($receiveStrHex);
+//         echo " answerHEX:" . $receiveStrHex;    
+//      echo " answerS1HEX:" . $s1hex;   
+//          echo " answerS1:" . $s1;
+//echo " answerSK1:" . $sk1;                  
+//echo           '<br>'; 
+if ($s1<>0)    sg($objname.".S1",$s1);         
+if ($s1hex<>0)    sg($objname."S1hex",$s1hex);          
+         
+//цикл 6 счетчик тариф 2
+        $sendStr = 'ff 01 06 c0 62';  // S2
+        $sendStrArray = str_split(str_replace(' ', '', $sendStr), 2);  // The 16 binary data into a set of two arrays
+     
+                      for ($j = 0; $j <count ($sendStrArray); $j++) {
+                              socket_write ($socket, Chr (hexdec ($sendStrArray[$j])));   // by group data transmission
+            }
+            $receiveStr = "";
+            $receiveStr = socket_read($socket, 1024, PHP_BINARY_READ);  // The 2 band data received 
+                      $receiveStrHex = bin2hex ($receiveStr);   // the 2 hexadecimal data convert 16 hex
+       
+$s2hex=substr($receiveStrHex,12,2).substr($receiveStrHex,10,2).substr($receiveStrHex,8,2);
+$s2=hexdec($s2hex)/1000;       
+$sk2=$s2*0.00027777777777778;
+ echo  "S2:".$sendStr ; 
+//         echo " answer:" . $receiveStr;   
+//         echo " answerSTR:" .hex2str($receiveStrHex);
+//         echo " answerHEX:" . $receiveStrHex;    
+//      echo " answerS2HEX:" . $s2hex;   
+//          echo " answerS2:" . $s2;
+//echo " answerSK2:" . $sk2;         
+//echo '<br>'; 
+if ($s2<>0)    sg($objname.".S2",$s2);                  
+if ($s2hex<>0) sg($objname.".S1hex",$s2hex);                   
+
+         
+        }
+        socket_close($socket);  // Close Socket
+
+
+
+ }
+
+
 
 /**
 * milur_devices edit/add
@@ -293,6 +491,11 @@ function checkSettings() {
 * @access private
 */
  function dbInstall($data = '') {
+
+setGlobal('cycle_milurAutoRestart','1');	 	 
+$classname='Milur';
+addClass($classname); 
+
 /*
 milur_devices - 
 */
@@ -303,6 +506,27 @@ milur_devices -
  milur_devices: LINKED_PROPERTY varchar(100) NOT NULL DEFAULT ''
 EOD;
   parent::dbInstall($data);
+
+  $data = <<<EOD
+ milur_config: parametr varchar(300)
+ milur_config: value varchar(100)  
+EOD;
+   parent::dbInstall($data);
+
+
+
+$par['parametr'] = 'EVERY';
+$par['value'] = 30;		 
+SQLInsert('yaweather_config', $par);				
+	
+$par['parametr'] = 'LASTCYCLE_TS';
+$par['value'] = "0";		 
+SQLInsert('yaweather_config', $par);						
+		
+$par['parametr'] = 'LASTCYCLE_TXT';
+$par['value'] = "0";		 
+SQLInsert('yaweather_config', $par);						
+
  }
 // --------------------------------------------------------------------
 }
@@ -311,3 +535,26 @@ EOD;
 * TW9kdWxlIGNyZWF0ZWQgSmFuIDAzLCAyMDE4IHVzaW5nIFNlcmdlIEouIHdpemFyZCAoQWN0aXZlVW5pdCBJbmMgd3d3LmFjdGl2ZXVuaXQuY29tKQ==
 *
 */
+
+function strToHex($string){
+    $hex='';
+    for ($i=0; $i < strlen($string); $i++){
+        $hex .= dechex(ord($string[$i]));
+    }
+    return $hex;
+}
+
+
+function hexToStr($hex){
+    $string='';
+    for ($i=0; $i < strlen($hex)-1; $i+=2){
+        $string .= chr(hexdec($hex[$i].$hex[$i+1]));
+    }
+    return $string;
+}
+
+function hex2str($hex) {
+    $str = '';
+    for($i=0;$i<strlen($hex);$i+=2) $str .= chr(hexdec(substr($hex,$i,2)));
+    return $str;
+}
