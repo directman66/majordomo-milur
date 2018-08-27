@@ -259,7 +259,9 @@ $host= SETTINGS_APPMILUR_IP;
 $port= SETTINGS_APPMILUR_PORT;;
    $socket = socket_create(AF_INET, SOCK_STREAM, getprotobyname("tcp"));  // Create Socket
         if (socket_connect($socket, $host, $port)) {  //Connect
-$objname='current';         
+//$objname='current';         
+$objname=SETTINGS_APPMILUR_MODEL;
+addClassObject('Milur',$objname);
 sg($objname.".lasttimestamp",gg($objname.".timestamp"));                    
          
          
