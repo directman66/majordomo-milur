@@ -1,5 +1,11 @@
 <img src="../img/modules/[#MODEL#].png" width="20%" height="20%" align="right" > 
-
-Текущее значение мощности: [#P#] <br><br>
-Текущее значение напряжения: [#U#] <br><br>
-Текущее значение силы тока: [#I#] <br><br>
+<br>
+Последнее значение было получено: [#TS#] <br><br>
+Текущее значение мощности: [#P#] Вт<br><br> 
+Текущее значение напряжения: [#U#] В<br><br> 
+Текущее значение силы тока: [#I#] А<br><br> 
+<hr/>
+Мощность:<br>
+<iframe src="/module/charts.html?id=config&period=24h&property=[#MODEL#].P&bg=light" width=600 height=400></iframe> 
+<br>Напряжение:<br>
+<iframe src="/module/charts.html?id=config&period=24h&property=[#MODEL#].U" width=600 height=400 bgcolor='red'></iframe> 
