@@ -20,12 +20,14 @@
 	 <ul class="nav nav-tabs">
 
 <br>
-
-<li [#if TAB=="" || TAB=="config" #] class="active" [#endif#]><a href="?data_source=<#DATA_SOURCE#>&view_mode=&id=<#ID#>&tab=config"><span class="glyphicon glyphicon-cog"></span> Настройки</a></li>
+<li [#if TAB=="" || TAB=="info" #] class="active" [#endif#]><a href="?data_source=<#DATA_SOURCE#>&view_mode=&id=<#ID#>&tab=info"><span class="glyphicon glyphicon-cog"></span> Информация</a></li>
+<li [#if TAB=="config" #] class="active" [#endif#]><a href="?data_source=<#DATA_SOURCE#>&view_mode=&id=<#ID#>&tab=config"><span class="glyphicon glyphicon-cog"></span> Настройки</a></li>
 <li [#if TAB=="debug" #] class="active" [#endif#]><a href="?view_mode=&tab=debug"><span class="glyphicon glyphicon-info-sign"></span> Отладка</a> </li>	
 <li [#if TAB=="help" #] class="active" [#endif#]><a href="?view_mode=&tab=help"><span class="glyphicon glyphicon-info-sign"></span> Помощь</a> </li>	
 </ul>
-[#if TAB="config" || TAB==""#]
+
+[#if TAB="info"|| TAB==""#] [#inc info.html#] [#endif#]
+[#if TAB="config"#]
 <br>
 <div>
 <div>
