@@ -214,7 +214,7 @@ function checkSettings() {
     )
 ,   array(
     'NAME'=>'APPMILUR_ENABLE', 
-    'TITLE'=>'Enable',
+    'TITLE'=>'Enable cycle',
     'TYPE'=>'yesno',
     'DEFAULT'=>'1'
     )
@@ -222,7 +222,7 @@ function checkSettings() {
     'NAME'=>'APPMILUR_ENABLEDEBUG', 
     'TITLE'=>'Enable debug',
     'TYPE'=>'yesno',
-    'DEFAULT'=>'1'
+    'DEFAULT'=>'2'
     )
 
 
@@ -723,6 +723,4 @@ function hex2str($hex) {
 * TW9kdWxlIGNyZWF0ZWQgSmFuIDAzLCAyMDE4IHVzaW5nIFNlcmdlIEouIHdpemFyZCAoQWN0aXZlVW5pdCBJbmMgd3d3LmFjdGl2ZXVuaXQuY29tKQ==
 *
 */
-
-
 
