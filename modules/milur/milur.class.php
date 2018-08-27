@@ -123,6 +123,7 @@ function admin(&$out) {
 		}
 
  $this->getConfig();
+ $out['MODEL']=SETTINGS_APPMILUR_MODEL;		
 
  if ($this->view_mode=='update_settings') {
    global $api_url;
