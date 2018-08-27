@@ -187,7 +187,7 @@ function checkSettings() {
     'NAME'=>'APPMILUR_IP', 
     'TITLE'=>'IP adress ser2net: (*)', 
     'TYPE'=>'text',
-    'DEFAULT'=>'192.168.1.X'
+    'DEFAULT'=>'192.168.1.1'
     ),
 
    array(
@@ -218,6 +218,13 @@ function checkSettings() {
     'TYPE'=>'yesno',
     'DEFAULT'=>'1'
     )
+,   array(
+    'NAME'=>'APPMILUR_ENABLEDEBUG', 
+    'TITLE'=>'Enable debug',
+    'TYPE'=>'yesno',
+    'DEFAULT'=>'1'
+    )
+
 
 
    );
@@ -266,18 +273,19 @@ $this->getdata();
  function getdata() {
 SQLexec("update milur_config set value='' where parametr='DEBUG'");	    
 
-$debug=date('m/d/Y H:i:s', time())."<br>";
+if ($enabledebug==1) {$debug=date('m/d/Y H:i:s', time())."<br>";}
 
 $host= SETTINGS_APPMILUR_IP;
 $port= SETTINGS_APPMILUR_PORT;;
    $socket = socket_create(AF_INET, SOCK_STREAM, getprotobyname("tcp"));  // Create Socket
         if (socket_connect($socket, $host, $port)) {  //Connect
 
-$debug.='Socket сonnected '.$host.'('. $port.')<br>';
+if ($enabledebug==1) {$debug.='Socket сonnected '.$host.'('. $port.')<br>';}
 
 
 //$objname='current';         
 $objname=SETTINGS_APPMILUR_MODEL;
+$enabledebug=SETTINGS_APPMILUR_ENABLEDEBUG;
 addClassObject('Milur',$objname);
 sg($objname.".lasttimestamp",gg($objname.".timestamp"));                    
          
@@ -293,17 +301,19 @@ sg($objname.".lasttimestamp",gg($objname.".timestamp"));
             $receiveStr = socket_read($socket, 1024, PHP_BINARY_READ);  // The 2 band data received 
                       $receiveStrHex = bin2hex ($receiveStr);   // the 2 hexadecimal data convert 16 hex
 
+if ($enabledebug==1) {
 $debug.="cicle 1<br>";
 $debug.=" send:".$sendStr."<br>" ; 
 $debug.=" answer:" . $receiveStr."<br>";   
 $debug.=" answerSTR:" .hex2str($receiveStrHex)."<br>";
 $debug.=" answerHEX:" . $receiveStrHex.'<br>';
+}
 //echo $debug;
 
 
          
        //цикл 2
-/*         
+         
         $sendStr = 'ff 01 20 41 b8';  // модель
         $sendStrArray = str_split(str_replace(' ', '', $sendStr), 2);  // The 16 binary data into a set of two arrays
      
@@ -314,11 +324,13 @@ $debug.=" answerHEX:" . $receiveStrHex.'<br>';
             $receiveStr = "";
             $receiveStr = socket_read($socket, 1024, PHP_BINARY_READ);  // The 2 band data received 
                       $receiveStrHex = bin2hex ($receiveStr);   // the 2 hexadecimal data convert 16 hex
-
-$debug.="send:".$sendStr ; 
-$debug.=" answer:" . $receiveStr;   
-$debug.=" answerSTR:" .hex2str($receiveStrHex);
-$debug.=" answerHEX:" . $receiveStrHex.'<br>';
+if ($enabledebug==1) {
+$debug.="cicle 2<br>";
+$debug.="send:".$sendStr ."<br>"; 
+$debug.="answer:" . $receiveStr."<br>";   
+$debug.="answerSTR:" .hex2str($receiveStrHex)."<br>";
+$debug.="answerHEX:" . $receiveStrHex.'<br>';
+}
 
 if ($receiveStr<>0)        sg($objname.".model",$receiveStr);  
 if ($receiveStr<>0) sg($objname.".timestamp",time());            
@@ -444,15 +456,18 @@ if ($s2hex<>0) sg($objname.".S1hex",$s2hex);
 */
 
         socket_close($socket);  // Close Socket       
-$debug.='Socked closed.<br>';
+if ($enabledebug==1) {$debug.='Socked closed.<br>';}
 
 
         } 
 else 
-{$debug='Error create socket '.$host.'('. $port.')';}
+{
+if ($enabledebug==1) {$debug='Error create socket '.$host.'('. $port.')';}
+}
      socket_close($socket);  // Close Socket       
+if ($enabledebug==1) {
 SQLexec("update milur_config set value='$debug' where parametr='DEBUG'");	    
-sg($objname.'.debug',$debug);
+sg($objname.'.debug',$debug);}
 
 
 
