@@ -101,6 +101,7 @@ function run() {
   $out['ACTION']=$this->action;
   $out['TAB']=$this->tab;
   $this->data=$out;
+  $this->checkSettings();
   $p=new parser(DIR_TEMPLATES.$this->name."/".$this->name.".html", $this->data, $this);
   $this->result=$p->result;
 }
@@ -166,6 +167,73 @@ function usual(&$out) {
  function search_milur_devices(&$out) {
   require(DIR_MODULES.$this->name.'/milur_devices_search.inc.php');
  }
+
+
+
+function checkSettings() {
+
+ // ����� �������� ������ ��� ��������� - ������ ���� �� ���������, ��� ��� ���� ��������� � ����������� 
+  $settings=array(
+   array(
+    'NAME'=>'APPMILUR_IP', 
+    'TITLE'=>'IP adress ser2net: (*)', 
+    'TYPE'=>'text',
+    'DEFAULT'=>'192.168.1.X'
+    ),
+
+   array(
+    'NAME'=>'APPMILUR_PORT', 
+    'TITLE'=>'Milur ser2net port',
+    'TYPE'=>'text',
+    'DEFAULT'=>'3000'
+    )
+
+ ,  array(
+    'NAME'=>'APPMILUR_MODEL', 
+    'TITLE'=>'Milur ser2net port',
+    'TYPE'=>'text',
+    'DEFAULT'=>'3000'
+    )
+	  
+	  
+,array(	  
+'NAME'=>'APPMILUR_INTERVAL', 
+    'TITLE'=>'Interval (sec >= 5sec):', 
+    'TYPE'=>'text',
+    'DEFAULT'=>'20'
+    )
+,   array(
+    'NAME'=>'APPMILUR_ENABLE', 
+    'TITLE'=>'Enable',
+    'TYPE'=>'yesno',
+    'DEFAULT'=>'1'
+    )
+
+
+   );
+
+
+   foreach($settings as $k=>$v) {
+    $rec=SQLSelectOne("SELECT ID FROM settings WHERE NAME='".$v['NAME']."'");
+    if (!$rec['ID']) {
+     $rec['NAME']=$v['NAME'];
+     $rec['VALUE']=$v['DEFAULT'];
+     $rec['DEFAULTVALUE']=$v['DEFAULT'];
+     $rec['TITLE']=$v['TITLE'];
+     $rec['TYPE']=$v['TYPE'];
+     $rec['DATA']=$v['DATA'];
+     $rec['ID']=SQLInsert('settings', $rec);
+     Define('SETTINGS_'.$rec['NAME'], $v['DEFAULT']);
+    }
+   }
+
+ 	
+ 
+	
+	
+}
+
+
 /**
 * milur_devices edit/add
 *
@@ -234,154 +302,6 @@ milur_devices -
  milur_devices: LINKED_PROPERTY varchar(100) NOT NULL DEFAULT ''
 EOD;
   parent::dbInstall($data);
-   
-   setGlobal('cycle_milurAutoRestart','1');	 	 
-$classname='Milur';
-addClass($classname); 
-
-
-$OnChange='
-$i=gg("current.P")/gg("current.U");
-sg("current.I",  round($i,2));
-SQLUpdate(\'objects\', array("ID"=>$this->id, "DESCRIPTION"=>gg(\'sysdate\').' '.gg(\'timenow\'))); 
-
-//расчет потребленного электричества с момента последней проверки
-//получаем дату предыдущей проверки
-//$laststamp=getHistoryValue($this->getProperty(\'timestamp\'),);
-$t1=gg("current.t1");
-$t2=gg("current.t2");
-$laststamp=gg(\'current.lasttimestamp\');
-$diff=(gmdate(\'i\',trim(time()-$laststamp)));
-$pattern = "|\b[0]+([1-9][\d]*)|is"; 
-$diff2= preg_replace($pattern, "\\1", $diff); 
-sg("current.proshlo_min",  $diff2);
-
-//получаем последннее значение мощности
-//$lastph=getHistoryMax($this->getProperty(\'P\'));
-//$lastph=getHistoryMax("current.P");
-$lastph=getHistoryValue("current.P", $laststamp-1,$laststamp+1);
-//переведем в ват в мин
-$lastpm=$lastph*0.0166667;
- //за последний период в минутах было потреблено ватт
-$potrebleno=$lastpm*$diff2;
-sg("current.potrebleno_w",  $potrebleno);
-sg("current.lastph",  $lastph);
-sg("current.lastpm",  $lastpm);
-$time=date("H:i:s");
-//sg("current.time",  $time);
-
-$date_min = new DateTime("7:00"); // минимальное значение времени
-$date_max = new DateTime("23:00"); // максимальное значение времени
-$date_now = new DateTime($date); // текущее значение времени
-// Проверяем, находится ли $date_now в диапазоне
-if ($date_now >= $date_min && $date_now <= $date_max) 
-{$tarif=1; 
-sg("current.potrebleno_w_t1",  $potrebleno);
-sg("current.potrebleno_w_t1_sum",  gg("current.potrebleno_w_t1_sum")+$potrebleno); 
-//$st=$t1/16.6667;
- $st=$t1/1000;
-sg("current.potrebleno_w_t1_rub",  $potrebleno*$st);
-sg("current.potrebleno_w_rub",  $potrebleno*$st); 
-} else
-{$tarif=2;
-sg("current.potrebleno_w_t2",  $potrebleno);
-sg("current.potrebleno_w_t2_sum",  gg("current.potrebleno_w_t2_sum")+$potrebleno);  
-//$st=$t2/16.6667;
- $st=$t2/1000;
-sg("current.potrebleno_w_t2_rub",  $potrebleno*$st);
-sg("current.potrebleno_w_rub",  $potrebleno*$st);
- 
-}
-sg("current.tarif",  $tarif);
-';
-
-addClassMethod($classname,'OnChange',$OnChange);	 
-
-$prop_id=addClassProperty($classname, 'I', 365);
-if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']='Сила тока, А'; //   <-----------
-SQLUpdate('properties',$property); } 
-
-$prop_id=addClassProperty($classname, 'P', 365);
-if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']='Мгновенная мощность, Вт'; //   <-----------
-$property['ONCHANGE']="OnChange"; //	   	       
-SQLUpdate('properties',$property); } 
-
-$prop_id=addClassProperty($classname, 'potrebleno_w', 365);
-if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']='Израсходовано ват с момента последнего считывания'; //   <-----------
-SQLUpdate('properties',$property); } 
-
-$prop_id=addClassProperty($classname, 'potrebleno_w_rub', 365);
-if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']='Израсходовано в руб.  с момента последнего считывания'; //   <-----------
-SQLUpdate('properties',$property); } 
-
-$prop_id=addClassProperty($classname, 'potrebleno_w_t1', 365);
-if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']='Израсходовано в тарифе 1 с момента последнего считывания'; //   <-----------
-SQLUpdate('properties',$property); } 
-
-$prop_id=addClassProperty($classname, 'potrebleno_w_t2', 365);
-if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']='Израсходовано в тарифе 2 с момента последнего считывания'; //   <-----------
-SQLUpdate('properties',$property); } 	 
-
-$prop_id=addClassProperty($classname, 'potrebleno_w_t1_rub', 365);
-if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']='Израсходовано в тарифе 2 с момента последнего считывания'; //   <-----------
-SQLUpdate('properties',$property); } 	 
-
-$prop_id=addClassProperty($classname, 'potrebleno_w_t2_rub', 365);
-if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']='Израсходовано в тарифе 2 с момента последнего считывания'; //   <-----------
-SQLUpdate('properties',$property); } 	 
-
-$prop_id=addClassProperty($classname, 'proshlo_min', 365);
-if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']='Отрезок времени в мин с последнего снятия показаний'; //   <-----------
-SQLUpdate('properties',$property); } 
-
-
-$prop_id=addClassProperty($classname, 'S1', 365);
-if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']='Счетчик 1'; //   <-----------
-SQLUpdate('properties',$property); } 
-
-$prop_id=addClassProperty($classname, 'S2', 365);
-if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']='Счетчик 2'; //   <-----------
-SQLUpdate('properties',$property); } 	 
-
-$prop_id=addClassProperty($classname, 'U', 365);
-if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']='Напряжение'; //   <-----------
-SQLUpdate('properties',$property); } 	 
-
-$prop_id=addClassProperty($classname, 'timestamp ', 365);
-if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']='Время в unx'; //   <-----------
-SQLUpdate('properties',$property); } 	 
-
-
-  $data = <<<EOD
- milur_config: parametr varchar(300)
- milur_config:  value varchar(100)  
-EOD;
-   parent::dbInstall($data);
-	 
-	 
-		
-$par['parametr'] = 'LASTCYCLE_TS';
-$par['value'] = "0";		 
-SQLInsert('milur_config', $par);						
-		
-$par['parametr'] = 'LASTCYCLE_TXT';
-$par['value'] = "0";		 
-SQLInsert('milur_config', $par);						
-   
-   
  }
 // --------------------------------------------------------------------
 }
