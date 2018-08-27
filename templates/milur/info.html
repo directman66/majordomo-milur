@@ -1,11 +1,47 @@
 <img src="../img/modules/[#MODEL#].png" width="20%" height="20%" align="right" > 
 <br>
-Последнее значение было получено: [#TS#] <br><br>
-Текущее значение мощности: [#P#] Вт<br><br> 
-Текущее значение напряжения: [#U#] В<br><br> 
-Текущее значение силы тока: [#I#] А<br><br> 
+<style>
+.raz {
+  border-spacing: 12.5em 1.3em; /* border-collapse наследуется, применяется только к table или inline-table элементам с border-collapse: separate; */ 
+}
+.raz,
+.raz td {
+  border: 0px solid red;
+padding: .3em 1em
+}
+</style>
+
+<table class="raz">
+<tr>
+<td><b>Последнее значение было получено: [#TS#]<b></td>
+<td><b>Текущее значение счетчиков<br></td>
+</tr>
+<tr>
+<td>Текущее значение мощности: [#P#] Вт </td>
+<td>Тариф1: [#S1#] 
+</tr>
+<tr>
+<td>Текущее значение напряжения: [#U#] В </td>
+<td>Тариф2: [#S2#] <br> </td>
+</tr>
+<tr>
+<td>Текущее значение силы тока: [#I#] А </td>
+<td>Общий счетчик: [#S0#] <br> </td>
+</tr>
+
+
+</table>
+
+
 <hr/>
-Мощность:<br>
-<iframe src="/module/charts.html?id=config&period=24h&property=[#MODEL#].P&bg=light" width=600 height=400></iframe> 
-<br>Напряжение:<br>
-<iframe src="/module/charts.html?id=config&period=24h&property=[#MODEL#].U" width=600 height=400 bgcolor='red'></iframe> 
+<table>
+<tr>
+<td>Мощность:</td>
+<td>Напряжение:</td>
+</tr><tr>
+<td><iframe src="/module/charts.html?id=config&period=24h&property=[#MODEL#].P&bg=light" width=600 height=400></iframe> </td>
+<td><iframe src="/module/charts.html?id=config&period=24h&property=[#MODEL#].U" width=600 height=400 bgcolor='red'></iframe> </td>
+</tr>
+</table>
+
+
