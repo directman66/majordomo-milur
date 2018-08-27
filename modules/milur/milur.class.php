@@ -18,7 +18,7 @@ class milur extends module {
 */
 function milur() {
   $this->name="milur";
-  $this->title="milur";
+  $this->title="Милур";
   $this->module_category="<#LANG_SECTION_DEVICES#>";
   $this->checkInstalled();
 }
@@ -138,15 +138,9 @@ function admin(&$out) {
  if (isset($this->data_source) && !$_GET['data_source'] && !$_POST['data_source']) {
   $out['SET_DATASOURCE']=1;
  }
- if ($this->data_source=='milur_devices' || $this->data_source=='') {
-  if ($this->view_mode=='' || $this->view_mode=='search_milur_devices') {
-   $this->search_milur_devices($out);
-  }
-  if ($this->view_mode=='edit_milur_devices') {
-   $this->edit_milur_devices($out, $this->id);
-  }
-  if ($this->view_mode=='delete_milur_devices') {
-   $this->delete_milur_devices($this->id);
+ 
+  
+  
    $this->redirect("?");
   }
  }
@@ -500,15 +494,15 @@ EOD;
 
 $par['parametr'] = 'EVERY';
 $par['value'] = 30;		 
-SQLInsert('yaweather_config', $par);				
+SQLInsert('milur_config', $par);				
 	
 $par['parametr'] = 'LASTCYCLE_TS';
 $par['value'] = "0";		 
-SQLInsert('yaweather_config', $par);						
+SQLInsert('milur_config', $par);						
 		
 $par['parametr'] = 'LASTCYCLE_TXT';
 $par['value'] = "0";		 
-SQLInsert('yaweather_config', $par);						
+SQLInsert('milur_config', $par);						
 
  }
 // --------------------------------------------------------------------
