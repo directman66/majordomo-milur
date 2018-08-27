@@ -1,7 +1,8 @@
 <div>
-<img src="../img/modules/milandr.png" width="10%" height="10%"  >
-<a href="https://www.milur.ru/"> <img src="../img/modules/milur_big.png" width="10%" height="10%"  > </a>
 
+<a href="https://www.milur.ru/"> 
+<img src="../img/modules/milandr.png" width="20%" height="20%"  > &nbsp;&nbsp; &nbsp;&nbsp;
+</a>&nbsp;&nbsp; &nbsp;&nbsp;
  &nbsp;&nbsp;<a class="btn btn-default" href="?data_source=<#DATA_SOURCE#>&view_mode=get&tab=">GET DATA</a>
 
 &nbsp;&nbsp;&nbsp;&nbsp;	
@@ -13,7 +14,7 @@
 
  &nbsp; 
 </div>
-<br>
+
 
 
 	 <ul class="nav nav-tabs">
@@ -24,9 +25,13 @@
 <li [#if TAB=="help" #] class="active" [#endif#]><a href="?view_mode=<#VIEW_MODE#>&tab=help"><span class="glyphicon glyphicon-info-sign"></span> Помощь</a> </li>	
 </ul>
 [#if TAB="config" || TAB==""#]
-<div>
 <br>
+<div>
+<div>
+<img src="../img/modules/[#cntname#].png" width="20%" height="20%" align="right" > 
+</div>
  [#module name="settings"  action="admin"  filter_name="appmilur"#]
+
 </div>
 
  [#endif#]
