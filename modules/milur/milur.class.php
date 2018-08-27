@@ -133,6 +133,10 @@ function admin(&$out) {
  $this->getConfig();
  $out['MODEL']=SETTINGS_APPMILUR_MODEL;		
 
+ $out['P']=gg(SETTINGS_APPMILUR_MODEL."P");		
+ $out['U']=gg(SETTINGS_APPMILUR_MODEL."U");		
+ $out['I']=gg(SETTINGS_APPMILUR_MODEL."I");		
+
 $cmd_rec = SQLSelectOne("SELECT VALUE FROM milur_config where parametr='DEBUG'");
 $out['MSG_DEBUG']=$cmd_rec['VALUE'];
 
