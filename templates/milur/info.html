@@ -1,4 +1,4 @@
-<img src="../img/modules/[#MODEL#].png" width="20%" height="20%" align="right" > 
+
 <br>
 <style>
 .raz {
@@ -10,15 +10,19 @@
 padding: .3em 1em
 }
 </style>
-
+<table >
+<tr><td>
 <table class="raz">
 <tr>
 <td><b>Последнее значение было получено: [#TS#]<b></td>
 <td><b>Текущее значение счетчиков<br></td>
+
+
 </tr>
 <tr>
 <td>Текущее значение мощности: [#P#] Вт </td>
 <td>Тариф1: [#S1#] 
+
 </tr>
 <tr>
 <td>Текущее значение напряжения: [#U#] В </td>
@@ -31,7 +35,14 @@ padding: .3em 1em
 
 
 </table>
+</td>
+<td>
+   <p><a href="/panel/linkedobject.html?op=redirect&object=[#MODEL#]&sub=properties"><img src="../img/modules/[#MODEL#].png" width="30%" 
+   height="30%" border="0" alt="Пример"></a></p>
 
+</td>
+</tr>
+</table>
 
 <hr/>
 <table>
