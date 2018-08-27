@@ -22,6 +22,7 @@
 <br>
 
 <li [#if TAB=="" || TAB=="config" #] class="active" [#endif#]><a href="?data_source=<#DATA_SOURCE#>&view_mode=<#VIEW_MODE#>&id=<#ID#>&tab=config"><span class="glyphicon glyphicon-cog"></span> Настройки</a></li>
+<li [#if TAB=="debug" #] class="active" [#endif#]><a href="?view_mode=<#VIEW_MODE#>&tab=debug"><span class="glyphicon glyphicon-info-sign"></span> Отладка</a> </li>	
 <li [#if TAB=="help" #] class="active" [#endif#]><a href="?view_mode=<#VIEW_MODE#>&tab=help"><span class="glyphicon glyphicon-info-sign"></span> Помощь</a> </li>	
 </ul>
 [#if TAB="config" || TAB==""#]
@@ -35,4 +36,15 @@
 </div>
 
  [#endif#]
+
+[#if TAB="debug"#]
+<br>
+Degug:
+<div>
+[#DEBUG#]
+
+</div>
+
+ [#endif#]
+
 [#if TAB="help"#] [#inc help.html#] [#endif#]
