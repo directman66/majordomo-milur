@@ -260,7 +260,7 @@ SQLexec("update milur_config set value=now() where parametr='LASTCYCLE_TXT'");
 
  function getdata() {
 
-
+/*
 $host= SETTINGS_APPMILUR_IP;
 $port= SETTINGS_APPMILUR_PORT;;
    $socket = socket_create(AF_INET, SOCK_STREAM, getprotobyname("tcp"));  // Create Socket
@@ -427,7 +427,7 @@ if ($s2hex<>0) sg($objname.".S1hex",$s2hex);
         }
         socket_close($socket);  // Close Socket
 
-
+*/
 
  }
 
@@ -438,30 +438,13 @@ if ($s2hex<>0) sg($objname.".S1hex",$s2hex);
 *
 * @access public
 */
- function edit_milur_devices(&$out, $id) {
-  require(DIR_MODULES.$this->name.'/milur_devices_edit.inc.php');
- }
+ 
 /**
 * milur_devices delete record
 *
 * @access public
 */
- function delete_milur_devices($id) {
-  $rec=SQLSelectOne("SELECT * FROM milur_devices WHERE ID='$id'");
-  // some action for related tables
-  SQLExec("DELETE FROM milur_devices WHERE ID='".$rec['ID']."'");
- }
- function propertySetHandle($object, $property, $value) {
-  $this->getConfig();
-   $table='milur_devices';
-   $properties=SQLSelect("SELECT ID FROM $table WHERE LINKED_OBJECT LIKE '".DBSafe($object)."' AND LINKED_PROPERTY LIKE '".DBSafe($property)."'");
-   $total=count($properties);
-   if ($total) {
-    for($i=0;$i<$total;$i++) {
-     //to-do
-    }
-   }
- }
+ 
 /**
 * Install
 *
