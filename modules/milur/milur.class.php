@@ -306,7 +306,7 @@ sg($objname.".lasttimestamp",gg($objname.".timestamp"));
                       $receiveStrHex = bin2hex ($receiveStr);   // the 2 hexadecimal data convert 16 hex
 
 if ($enabledebug==1) {
-$debug.="cicle 1<br>";
+$debug.="cicle 1 connect<br>";
 $debug.=" send:".$sendStr."<br>" ; 
 //$debug.=" answer:" . $receiveStr."<br>";   
 //$debug.=" answerSTR:" .hex2str($receiveStrHex)."<br>";
@@ -329,7 +329,7 @@ $debug.=" answerHEX:" . $receiveStrHex.'<br>';
             $receiveStr = socket_read($socket, 1024, PHP_BINARY_READ);  // The 2 band data received 
                       $receiveStrHex = bin2hex ($receiveStr);   // the 2 hexadecimal data convert 16 hex
 if ($enabledebug==1) {
-$debug.="cicle 2<br>";
+$debug.="cicle 2 model:<br>";
 $debug.="send:".$sendStr ."<br>"; 
 //$debug.="answer:" . $receiveStr."<br>";   
 //$debug.="answerSTR:" .hex2str($receiveStrHex)."<br>";
@@ -354,7 +354,7 @@ $phex=substr($receiveStrHex,12,2).substr($receiveStrHex,10,2).substr($receiveStr
 $p=hexdec($phex)/1000;          
 
 if ($enabledebug==1) {
-$debug.="cicle 3<br>";
+$debug.="cicle 3 P:<br>";
 $debug.=     "P:".$sendStr .'<br>'; 
 //$debug.=    " answer:" . $receiveStr;   
 //$debug.=    " answerSTR:" .hex2str($receiveStrHex);
@@ -382,13 +382,13 @@ $uhex=substr($receiveStrHex,12,2).substr($receiveStrHex,10,2).substr($receiveStr
 $u=hexdec($uhex)/1000;       
 
 if ($enabledebug==1) {
-$debug.="cicle 4<br>";
+$debug.="cicle 4 U:<br>";
 $debug.=   "U:".$sendStr.'<br>' ; 
 //$debug.=" answer:" . $receiveStr;   
 //$debug.=" answerSTR:" .hex2str($receiveStrHex);
 $debug.=" answerHEX:" . $receiveStrHex.'<br>';    
 $debug.=" answerUHEX:" . $uhex.'<br>';   
-$debug.=" answerU:" . $u.'<br>.'<br>''; 
+$debug.=" answerU:" . $u.'<br>'; 
 }
             if ($u<>0)    sg($objname.".U",round($u));        
 
@@ -406,9 +406,9 @@ $debug.=" answerU:" . $u.'<br>.'<br>'';
 $s0hex=substr($receiveStrHex,12,2).substr($receiveStrHex,10,2).substr($receiveStrHex,8,2);
 $s0=hexdec($s0hex)/1000;       
 $sk0=$s0*0.00027777777777778;         
- echo  "S0:".$sendStr ; 
+// echo  "S0:".$sendStr ; 
 if ($enabledebug==1) {
-$debug.="cicle 5<br>";
+$debug.="cicle 5 S0:<br>";
 //$debug.= " answer:" . $receiveStr;   
 //$debug.= " answerSTR:" .hex2str($receiveStrHex);
 $debug.= " answerHEX:" . $receiveStrHex.'<br>';    
@@ -435,7 +435,7 @@ $s1=hexdec($s1hex)/1000;
 $sk1=$s1*0.00027777777777778;         
 // echo  "S1:".$sendStr ; 
 if ($enabledebug==1) {
-$debug.="cicle 6.1<br>";
+$debug.="cicle 6.1 S1:<br>";
 //$debug.= " answer:" . $receiveStr;   
 //$debug.= " answerSTR:" .hex2str($receiveStrHex);
 $debug.= " answerHEX:" . $receiveStrHex.'<br>';    
@@ -463,7 +463,7 @@ $s2=hexdec($s2hex)/1000;
 $sk2=$s2*0.00027777777777778;
 // echo  "S2:".$sendStr ; 
 if ($enabledebug==1) {
-$debug.="cicle 6.2<br>";
+$debug.="cicle 6.2 S2:<br>";
 //$debug.= " answer:" . $receiveStr;   
 //$debug.= " answerSTR:" .hex2str($receiveStrHex);
 $debug.= " answerHEX:" . $receiveStrHex.'<br>';    
@@ -476,7 +476,7 @@ if ($s2<>0)    sg($objname.".S2",$s2);
 if ($s2hex<>0) sg($objname.".S1hex",$s2hex);            
 
 
-        socket_close($socket);  // Close Socket       
+socket_close($socket);  // Close Socket       
 if ($enabledebug==1) {$debug.='Socked closed.<br>';}
 
 
