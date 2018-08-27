@@ -529,12 +529,7 @@ SQLInsert('yaweather_config', $par);
 
  }
 // --------------------------------------------------------------------
-}
-/*
-*
-* TW9kdWxlIGNyZWF0ZWQgSmFuIDAzLCAyMDE4IHVzaW5nIFNlcmdlIEouIHdpemFyZCAoQWN0aXZlVW5pdCBJbmMgd3d3LmFjdGl2ZXVuaXQuY29tKQ==
-*
-*/
+	
 
 function strToHex($string){
     $hex='';
@@ -557,4 +552,11 @@ function hex2str($hex) {
     $str = '';
     for($i=0;$i<strlen($hex);$i+=2) $str .= chr(hexdec(substr($hex,$i,2)));
     return $str;
+}	
 }
+/*
+*
+* TW9kdWxlIGNyZWF0ZWQgSmFuIDAzLCAyMDE4IHVzaW5nIFNlcmdlIEouIHdpemFyZCAoQWN0aXZlVW5pdCBJbmMgd3d3LmFjdGl2ZXVuaXQuY29tKQ==
+*
+*/
+
