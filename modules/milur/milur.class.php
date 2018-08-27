@@ -172,7 +172,7 @@ function usual(&$out) {
 
 function checkSettings() {
 
- // ����� �������� ������ ��� ��������� - ������ ���� �� ���������, ��� ��� ���� ��������� � ����������� 
+
   $settings=array(
    array(
     'NAME'=>'APPMILUR_IP', 
@@ -190,9 +190,10 @@ function checkSettings() {
 
  ,  array(
     'NAME'=>'APPMILUR_MODEL', 
-    'TITLE'=>'Milur ser2net port',
-    'TYPE'=>'text',
-    'DEFAULT'=>'3000'
+    'TITLE'=>'Milur model',
+    'TYPE'=>'select',
+    'DEFAULT'=>'milur104',
+    'DATA'=>'milur104=Milur 104|milur307=Milur 307'
     )
 	  
 	  
