@@ -132,6 +132,12 @@ function admin(&$out) {
  $this->getConfig();
  $out['MODEL']=SETTINGS_APPMILUR_MODEL;		
 
+$cmd_rec = SQLSelectOne("SELECT VALUE FROM milur_config where parametr='DEBUG'");
+$out['MSG_DEBUG']=$cmd_rec['VALUE'];
+
+
+
+
  if ($this->view_mode=='update_settings') {
    global $api_url;
    $this->config['API_URL']=$api_url;
@@ -262,6 +268,7 @@ SQLexec("update milur_config set value=now() where parametr='LASTCYCLE_TXT'");
  function getdata() {
 
 
+
 $host= SETTINGS_APPMILUR_IP;
 $port= SETTINGS_APPMILUR_PORT;;
    $socket = socket_create(AF_INET, SOCK_STREAM, getprotobyname("tcp"));  // Create Socket
@@ -282,11 +289,13 @@ sg($objname.".lasttimestamp",gg($objname.".timestamp"));
             $receiveStr = "";
             $receiveStr = socket_read($socket, 1024, PHP_BINARY_READ);  // The 2 band data received 
                       $receiveStrHex = bin2hex ($receiveStr);   // the 2 hexadecimal data convert 16 hex
-//         echo  "send:".$sendStr ; 
-//         echo " answer:" . $receiveStr;   
-//         echo " answerSTR:" .hex2str($receiveStrHex);
-//         echo " answerHEX:" . $receiveStrHex.'<br>';
-   
+//$debug="cicle 1<br>";
+//$debug.=" send:".$sendStr."<br>" ; 
+//$debug.=" answer:" . $receiveStr."<br>";   
+//$debug.=" answerSTR:" .hex2str($receiveStrHex)."<br>";
+//$debug.=" answerHEX:" . $receiveStrHex.'<br>';
+
+
          
          //цикл 2
          
@@ -427,7 +436,7 @@ $sk2=$s2*0.00027777777777778;
 //echo '<br>'; 
 if ($s2<>0)    sg($objname.".S2",$s2);                  
 if ($s2hex<>0) sg($objname.".S1hex",$s2hex);                   
-
+//SQLexec("update milur_config set value='$debug' where parametr='DEBUG'");	    
          
         }
         socket_close($socket);  // Close Socket
@@ -626,6 +635,11 @@ SQLInsert('milur_config', $par);
 $par['parametr'] = 'LASTCYCLE_TXT';
 $par['value'] = "0";		 
 SQLInsert('milur_config', $par);						
+
+$par['parametr'] = 'DEBUG';
+$par['value'] = "0";		 
+SQLInsert('milur_config', $par);						
+
 
  }
 // --------------------------------------------------------------------
