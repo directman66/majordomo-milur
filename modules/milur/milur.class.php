@@ -144,6 +144,20 @@ function admin(&$out) {
  $out['S1']=gg(SETTINGS_APPMILUR_MODEL.".S1");		
  $out['S2']=gg(SETTINGS_APPMILUR_MODEL.".S2");		
 
+$now=date();
+
+$out['MONTH_WATT']=getHistorySum(SETTINGS_APPMILUR_MODEL.'.potrebleno_w', $now-2629743 ,$now);
+$out['MONTH_RUB']=getHistorySum(SETTINGS_APPMILUR_MODEL.'.potrebleno_w_rub', $now-2629743,$now);
+
+$out['DAY_WATT']=getHistorySum(SETTINGS_APPMILUR_MODEL.'.potrebleno_w', $now-86400 ,$now);
+$out['DAY_RUB']=getHistorySum(SETTINGS_APPMILUR_MODEL.'.potrebleno_w_rub', $now-86400 ,$now);
+
+$out['WEEK_WATT']=getHistorySum(SETTINGS_APPMILUR_MODEL.'.potrebleno_w', $now-604800 ,$now);
+$out['WEEK_RUB']=getHistorySum(SETTINGS_APPMILUR_MODEL.'.potrebleno_w_rub', $now-604800 ,$now);
+
+$out['YEAR_WATT']=getHistorySum(SETTINGS_APPMILUR_MODEL.'.potrebleno_w', $now-31556926 ,$now);
+$out['YEAR_RUB']=getHistorySum(SETTINGS_APPMILUR_MODEL.'.potrebleno_w_rub', $now-31556926 ,$now);
+
 
 $cmd_rec = SQLSelectOne("SELECT VALUE FROM milur_config where parametr='DEBUG'");
 $out['MSG_DEBUG']=$cmd_rec['VALUE'];
