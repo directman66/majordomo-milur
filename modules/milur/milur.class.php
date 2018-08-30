@@ -398,7 +398,7 @@ $debug.="answerHEX:" . $receiveStrHex.'<br>';
 }
 
 if ($receiveStr<>0)        sg($objname.".model",$receiveStr);  
-if ($receiveStr<>0) sg($objname.".timestamp",time());            
+//if ($receiveStr<>0) sg($objname.".timestamp",time());            
  
 //цикл 3
         $sendStr = 'ff 01 03 00 61';  // P
@@ -424,7 +424,7 @@ $debug.=    " answerPHEX:" . $phex.'<br>';
 $debug.=    " answerP:" . $p.'<br>';
 }
           if ($p<>0)       sg($objname.".P",round($p));
-          if ($p<>0) sg($objname.".timestamp",time());                     
+//          if ($p<>0) sg($objname.".timestamp",time());                     
 
          
     
@@ -653,7 +653,7 @@ $debug.=    " answerPHEX:" . $phex.'<br>';
 $debug.=    " answerP:" . $p.'<br>';
 }
           if ($p<>0)       sg($objname.".P",round($p));
-          if ($p<>0) sg($objname.".timestamp",time());                     
+//          if ($p<>0) sg($objname.".timestamp",time());                     
 
          
     
@@ -785,7 +785,7 @@ $debug.="answerHEX:" . $receiveStrHex.'<br>';
 }
 
 if ($receiveStr<>0)        sg($objname.".model",$receiveStr);  
-if ($receiveStr<>0) sg($objname.".timestamp",time());            
+//if ($receiveStr<>0) sg($objname.".timestamp",time());            
  
 
 socket_close($socket);  // Close Socket       
