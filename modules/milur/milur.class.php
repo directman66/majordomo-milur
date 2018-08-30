@@ -146,17 +146,17 @@ function admin(&$out) {
 
 $now=date();
 
-$out['MONTH_WATT']=getHistorySum(SETTINGS_APPMILUR_MODEL.'.potrebleno_w', $now-2629743 ,$now);
-$out['MONTH_RUB']=getHistorySum(SETTINGS_APPMILUR_MODEL.'.potrebleno_w_rub', $now-2629743,$now);
+$out['MONTH_WATT']=round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.potrebleno_w', $now-2629743 ,$now));
+$out['MONTH_RUB']=round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.potrebleno_w_rub', $now-2629743,$now));
 
-$out['DAY_WATT']=getHistorySum(SETTINGS_APPMILUR_MODEL.'.potrebleno_w', $now-86400 ,$now);
-$out['DAY_RUB']=getHistorySum(SETTINGS_APPMILUR_MODEL.'.potrebleno_w_rub', $now-86400 ,$now);
+$out['DAY_WATT']=round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.potrebleno_w', $now-86400 ,$now));
+$out['DAY_RUB']=round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.potrebleno_w_rub', $now-86400 ,$now));
 
-$out['WEEK_WATT']=getHistorySum(SETTINGS_APPMILUR_MODEL.'.potrebleno_w', $now-604800 ,$now);
-$out['WEEK_RUB']=getHistorySum(SETTINGS_APPMILUR_MODEL.'.potrebleno_w_rub', $now-604800 ,$now);
+$out['WEEK_WATT']=round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.potrebleno_w', $now-604800 ,$now));
+$out['WEEK_RUB']=round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.potrebleno_w_rub', $now-604800 ,$now));
 
-$out['YEAR_WATT']=getHistorySum(SETTINGS_APPMILUR_MODEL.'.potrebleno_w', $now-31556926 ,$now);
-$out['YEAR_RUB']=getHistorySum(SETTINGS_APPMILUR_MODEL.'.potrebleno_w_rub', $now-31556926 ,$now);
+$out['YEAR_WATT']=round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.potrebleno_w', $now-31556926 ,$now));
+$out['YEAR_RUB']=round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.potrebleno_w_rub', $now-31556926 ,$now));
 
 
 $cmd_rec = SQLSelectOne("SELECT VALUE FROM milur_config where parametr='DEBUG'");
@@ -371,7 +371,7 @@ $debug.="answerHEX:" . $receiveStrHex.'<br>';
 if ($receiveStr<>0)        sg($objname.".model",$receiveStr);  
 if ($receiveStr<>0) sg($objname.".timestamp",time());            
  
-         //цикл 3
+//цикл 3
         $sendStr = 'ff 01 03 00 61';  // P
         $sendStrArray = str_split(str_replace(' ', '', $sendStr), 2);  // The 16 binary data into a set of two arrays
      
@@ -596,25 +596,44 @@ SQLUpdate("objects", array("ID"=>$this->id, "DESCRIPTION"=>gg("sysdate")." ".gg(
 //расчет потребленного электричества с момента последней проверки
 //получаем дату предыдущей проверки
 //$laststamp=getHistoryValue($this->getProperty("timestamp"),);
+//$targetTime = strtotime("2015-05-13 17:00:00"); // NB: временная зона не задана, будет использована текущая временная зона.
+//$currentTime = time();
+//$difference = $targetTime - $currentTime; // разница, она же количество секунд
+//$roundedSecondDifference = $difference % 60; // разница в секундах с точностью до минут
+//$minuteDifference = floor($difference / 60); // полная разница в минутах
+//$roundedMiunteDifference = $minuteDifference % 60; // c точностью до часа
+// аналогично с часами
+
+
+
 $t1=gg($objn.".t1");
 $t2=gg($objn.".t2");
 $laststamp=gg($objn.".lasttimestamp");
-$diff=(gmdate("i",trim(time()-$laststamp)));
-$pattern = "|\b[0]+([1-9][\d]*)|is"; 
-$diff2= preg_replace($pattern, "\\1", $diff); 
+
+
+$diff = time()-$laststamp ;
+$diff2=floor($diff/60);
 sg($objn.".proshlo_min",  $diff2);
+sg($objn.".proshlo_sec",  $diff);
+
 
 
 //получаем последннее значение мощности
-//$lastph=getHistoryMax($this->getProperty("P"));
-//$lastph=getHistoryMax("current.P");
 $lastph=getHistoryValue($objn.".P", $laststamp-1,$laststamp+1);
-//переведем в ват в мин
+
+//переведем в ват в мин   1/60
 $lastpm=$lastph*0.0166667;
+//переведем в ват в сек 1/3600
+$k=1/3600;
+$lastps=$lastph*$k;
+
  //за последний период в минутах было потреблено ватт
-$potrebleno=$lastpm*$diff2;
-sg($objn.".potrebleno_w",  $potrebleno);
+$potrebleno=$lastpm*$diff2;  //с точностью до минут
+$potreblenos=$lastps*$diff;  //с точностью до секунд
+sg($objn.".potrebleno_w",  $potrebleno); //с точностью до минут
+sg($objn.".potrebleno_ws",  $potreblenos); //с точностью до секунд
 sg($objn.".lastph",  $lastph);
+sg($objn.".lastps",  $lastps);
 sg($objn.".lastpm",  $lastpm);
 $time=date("H:i:s");
 
@@ -642,8 +661,11 @@ sg($objn.".potrebleno_w_rub",  $potrebleno*$st);
  
 }
 sg($objn.".tarif",  $tarif);
+sg($objn.".lasttimestamp", time());
 
 ';
+
+
 
 setGlobal('cycle_milurAutoRestart','1');	 	 
 $classname='Milur';
@@ -663,17 +685,37 @@ $property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
 $property['DESCRIPTION']='Мгновенная потребляемая мощность'; //   <-----------
 SQLUpdate('properties',$property);} 
 
-$prop_id=addClassProperty($classname, 'S1', 30);
+$prop_id=addClassProperty($classname, 'S1', 0);
 if ($prop_id) {
 $property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
 $property['DESCRIPTION']='Значение счеткика тариф 1'; //   <-----------
 SQLUpdate('properties',$property);} 
 
-$prop_id=addClassProperty($classname, 'S2', 30);
+$prop_id=addClassProperty($classname, 'S2', 0);
 if ($prop_id) {
 $property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
 $property['DESCRIPTION']='Значение счеткика тариф 2'; //   <-----------
 SQLUpdate('properties',$property);} 
+
+$prop_id=addClassProperty($classname, 'S0', 0);
+if ($prop_id) {
+$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
+$property['DESCRIPTION']='Значение счеткика, общее'; //   <-----------
+SQLUpdate('properties',$property);} 
+
+
+$prop_id=addClassProperty($classname, 't1', 0);
+if ($prop_id) {
+$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
+$property['DESCRIPTION']='Тарифная ставка по тарифу 1, руб.'; //   <-----------
+SQLUpdate('properties',$property);} 
+
+$prop_id=addClassProperty($classname, 't2', 0);
+if ($prop_id) {
+$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
+$property['DESCRIPTION']='Тарифная ставка по тарифу 2, руб.'; //   <-----------
+SQLUpdate('properties',$property);} 
+
 
 $prop_id=addClassProperty($classname, 'timestamp', 30);
 if ($prop_id) {
@@ -691,9 +733,17 @@ SQLUpdate('properties',$property);}
 $prop_id=addClassProperty($classname, 'potrebleno_w', 90);
 if ($prop_id) {
 $property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']='Потреблено ват всего'; //   <-----------
+$property['DESCRIPTION']='Потреблено ват всего, с точностью до минут'; //   <-----------
 $property['ONCHANGE']=""; //	   	       
 SQLUpdate('properties',$property);} 
+
+$prop_id=addClassProperty($classname, 'potrebleno_ws', 90);
+if ($prop_id) {
+$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
+$property['DESCRIPTION']='Потреблено ват всего, с точностью до секунд'; //   <-----------
+$property['ONCHANGE']=""; //	   	       
+SQLUpdate('properties',$property);} 
+
 
 $prop_id=addClassProperty($classname, 'potrebleno_w_rub', 90);
 if ($prop_id) {
@@ -736,6 +786,58 @@ $property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
 $property['DESCRIPTION']='Отрезок времени в мин с последнего снятия показаний'; //   <-----------
 $property['ONCHANGE']=""; //	   	       
 SQLUpdate('properties',$property);} 
+
+$prop_id=addClassProperty($classname, 'proshlo_sec', 100);
+if ($prop_id) {
+$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
+$property['DESCRIPTION']='Отрезок времени в сек. с последнего снятия показаний'; //   <-----------
+$property['ONCHANGE']=""; //	   	       
+SQLUpdate('properties',$property);} 
+
+$prop_id=addClassProperty($classname, 'potrebleno_w_t1_sum', 0);
+if ($prop_id) {
+$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
+$property['DESCRIPTION']='Потреблено суммарно по тарифу 1, ват'; //   <-----------
+$property['ONCHANGE']=""; //	   	       
+SQLUpdate('properties',$property);} 
+
+
+
+$prop_id=addClassProperty($classname, 'potrebleno_w_t2_sum', 0);
+if ($prop_id) {
+$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
+$property['DESCRIPTION']='Потреблено суммарно по тарифу 2, ват'; //   <-----------
+$property['ONCHANGE']=""; //	   	       
+SQLUpdate('properties',$property);} 
+
+$prop_id=addClassProperty($classname, 'lastpm', 0);
+if ($prop_id) {
+$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
+$property['DESCRIPTION']='Текущий расход ват в минуту'; //   <-----------
+$property['ONCHANGE']=""; //	   	       
+SQLUpdate('properties',$property);} 
+
+$prop_id=addClassProperty($classname, 'lastps', 0);
+if ($prop_id) {
+$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
+$property['DESCRIPTION']='Текущий расход ват в секунду'; //   <-----------
+$property['ONCHANGE']=""; //	   	       
+SQLUpdate('properties',$property);} 
+
+$prop_id=addClassProperty($classname, 'lastph', 0);
+if ($prop_id) {
+$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
+$property['DESCRIPTION']='Текущий расход ват в час'; //   <-----------
+$property['ONCHANGE']=""; //	   	       
+SQLUpdate('properties',$property);} 
+
+$prop_id=addClassProperty($classname, 'tarif ', 0);
+if ($prop_id) {
+$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
+$property['DESCRIPTION']='Текущий тариф'; //   <-----------
+$property['ONCHANGE']=""; //	   	       
+SQLUpdate('properties',$property);} 
+
 
 
 
