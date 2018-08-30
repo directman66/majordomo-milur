@@ -308,7 +308,11 @@ $latest=$cmd_rec['VALUE'];
    if ($tdev < 0) {$has = true;}
    
    if ($has) {  
-$this->getpu();   
+
+$enable=SETTINGS_APPMILUR_ENABLE;
+if ($enable==1) {$this->getpu();   }
+
+
   } 
   }
 
