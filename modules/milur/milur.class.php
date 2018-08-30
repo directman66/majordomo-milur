@@ -169,6 +169,20 @@ setGlobal('cycle_milurControl','start');
 $this->getdata();
 //echo "start"; 
 }  
+
+if ($this->view_mode=='getcounters') {
+$this->getcounters();
+}  
+
+if ($this->view_mode=='getinfo') {
+$this->getinfo();
+}  
+
+if ($this->view_mode=='getipu') {
+$this->getpu();
+}  
+
+
 }  
  
   
@@ -437,6 +451,9 @@ $debug.=" answerU:" . $u.'<br>';
        
 $s0hex=substr($receiveStrHex,12,2).substr($receiveStrHex,10,2).substr($receiveStrHex,8,2);
 $s0=hexdec($s0hex)/1000;       
+
+//джоули в ват/часы
+///1 J = 0.00027777777777778 Wh
 $sk0=$s0*0.00027777777777778;         
 // echo  "S0:".$sendStr ; 
 if ($enabledebug==1) {
@@ -491,7 +508,11 @@ if ($s1hex<>0)    sg($objname."S1hex",$s1hex);
                       $receiveStrHex = bin2hex ($receiveStr);   // the 2 hexadecimal data convert 16 hex
        
 $s2hex=substr($receiveStrHex,12,2).substr($receiveStrHex,10,2).substr($receiveStrHex,8,2);
-$s2=hexdec($s2hex)/1000;       
+$s2=hexdec($s2hex)/1000;  
+
+//джоули в ват/часы
+///1 J = 0.00027777777777778 Wh
+   
 $sk2=$s2*0.00027777777777778;
 // echo  "S2:".$sendStr ; 
 if ($enabledebug==1) {
@@ -529,6 +550,405 @@ SQLexec("update milur_config set value=now() where parametr='LASTCYCLE_TXT'");
 
  }
 
+
+
+
+//////////////////////////////////////////////
+//////////////////////////////////////////////
+//////////////////////////////////////////////
+//////////////////////////////////////////////
+//////////////////////////////////////////////
+//////////////////////////////////////////////
+//////////////////////////////////////////////
+ function getpu() {
+
+$enabledebug=SETTINGS_APPMILUR_ENABLEDEBUG;
+SQLexec("update milur_config set value='' where parametr='DEBUG'");	    
+
+if ($enabledebug==1) {$debug=date('m/d/Y H:i:s', time())."<br>";}
+
+$host= SETTINGS_APPMILUR_IP;
+$port= SETTINGS_APPMILUR_PORT;
+   $socket = socket_create(AF_INET, SOCK_STREAM, getprotobyname("tcp"));  // Create Socket
+        if (socket_connect($socket, $host, $port)) {  //Connect
+
+if ($enabledebug==1) {$debug.='Socket сonnected '.$host.'('. $port.')<br>';}
+
+
+//$objname='current';         
+$objname=SETTINGS_APPMILUR_MODEL;
+
+addClassObject('Milur',$objname);
+
+sg($objname.".t1",SETTINGS_APPMILUR_T1);
+sg($objname.".t2",SETTINGS_APPMILUR_T2);
+
+//sg($objname.".lasttimestamp",gg($objname.".timestamp"));                    
+
+         
+         
+//circle 1
+        $sendStr = 'ff 08 00 ff ff ff ff ff ff 4f 2d';  // 16 hexadecimal data
+        $sendStrArray = str_split(str_replace(' ', '', $sendStr), 2);  // The 16 binary data into a set of two arrays
+     
+                      for ($j = 0; $j <count ($sendStrArray); $j++) {
+                              socket_write ($socket, Chr (hexdec ($sendStrArray[$j])));   // by group data transmission
+            }
+            $receiveStr = "";
+            $receiveStr = socket_read($socket, 1024, PHP_BINARY_READ);  // The 2 band data received 
+                      $receiveStrHex = bin2hex ($receiveStr);   // the 2 hexadecimal data convert 16 hex
+
+if ($enabledebug==1) {
+$debug.="cicle 1 connect<br>";
+$debug.=" send:".$sendStr."<br>" ; 
+//$debug.=" answer:" . $receiveStr."<br>";   
+//$debug.=" answerSTR:" .hex2str($receiveStrHex)."<br>";
+$debug.=" answerHEX:" . $receiveStrHex.'<br>';
+}
+//echo $debug;
+
+
+         
+ 
+//цикл 3
+        $sendStr = 'ff 01 03 00 61';  // P
+        $sendStrArray = str_split(str_replace(' ', '', $sendStr), 2);  // The 16 binary data into a set of two arrays
+     
+                      for ($j = 0; $j <count ($sendStrArray); $j++) {
+                              socket_write ($socket, Chr (hexdec ($sendStrArray[$j])));   // by group data transmission
+            }
+            $receiveStr = "";
+            $receiveStr = socket_read($socket, 1024, PHP_BINARY_READ);  // The 2 band data received 
+                      $receiveStrHex = bin2hex ($receiveStr);   // the 2 hexadecimal data convert 16 hex
+        
+$phex=substr($receiveStrHex,12,2).substr($receiveStrHex,10,2).substr($receiveStrHex,8,2);
+$p=hexdec($phex)/1000;          
+
+if ($enabledebug==1) {
+$debug.="cicle 3 P:<br>";
+$debug.=     "P:".$sendStr .'<br>'; 
+//$debug.=    " answer:" . $receiveStr;   
+//$debug.=    " answerSTR:" .hex2str($receiveStrHex);
+$debug.=    " answerHEX:" . $receiveStrHex.'<br>';
+$debug.=    " answerPHEX:" . $phex.'<br>';   
+$debug.=    " answerP:" . $p.'<br>';
+}
+          if ($p<>0)       sg($objname.".P",round($p));
+          if ($p<>0) sg($objname.".timestamp",time());                     
+
+         
+    
+     //цикл 4
+        $sendStr = 'ff 01 01 81 a0 ';  // U
+        $sendStrArray = str_split(str_replace(' ', '', $sendStr), 2);  // The 16 binary data into a set of two arrays
+     
+                      for ($j = 0; $j <count ($sendStrArray); $j++) {
+                              socket_write ($socket, Chr (hexdec ($sendStrArray[$j])));   // by group data transmission
+            }
+            $receiveStr = "";
+            $receiveStr = socket_read($socket, 1024, PHP_BINARY_READ);  // The 2 band data received 
+                      $receiveStrHex = bin2hex ($receiveStr);   // the 2 hexadecimal data convert 16 hex
+       
+$uhex=substr($receiveStrHex,12,2).substr($receiveStrHex,10,2).substr($receiveStrHex,8,2);
+$u=hexdec($uhex)/1000;       
+
+if ($enabledebug==1) {
+$debug.="cicle 4 U:<br>";
+$debug.=   "U:".$sendStr.'<br>' ; 
+//$debug.=" answer:" . $receiveStr;   
+//$debug.=" answerSTR:" .hex2str($receiveStrHex);
+$debug.=" answerHEX:" . $receiveStrHex.'<br>';    
+$debug.=" answerUHEX:" . $uhex.'<br>';   
+$debug.=" answerU:" . $u.'<br>'; 
+}
+            if ($u<>0)    sg($objname.".U",round($u));        
+
+socket_close($socket);  // Close Socket       
+if ($enabledebug==1) {$debug.='Socked closed.<br>';}
+
+
+        } 
+else 
+{
+if ($enabledebug==1) {$debug='Error create socket '.$host.'('. $port.')';}
+}
+     socket_close($socket);  // Close Socket       
+if ($enabledebug==1) {
+SQLexec("update milur_config set value='$debug' where parametr='DEBUG'");	    
+sg($objname.'.debug',$debug);}
+
+
+
+SQLexec("update milur_config set value=UNIX_TIMESTAMP() where parametr='LASTCYCLE_TS'");		   
+SQLexec("update milur_config set value=now() where parametr='LASTCYCLE_TXT'");		   	   
+
+ }
+
+
+
+
+//////////////////////////////////////////////
+//////////////////////////////////////////////
+//////////////////////////////////////////////
+//////////////////////////////////////////////
+//////////////////////////////////////////////
+//////////////////////////////////////////////
+//////////////////////////////////////////////
+ function getinfo() {
+
+$enabledebug=SETTINGS_APPMILUR_ENABLEDEBUG;
+SQLexec("update milur_config set value='' where parametr='DEBUG'");	    
+
+if ($enabledebug==1) {$debug=date('m/d/Y H:i:s', time())."<br>";}
+
+$host= SETTINGS_APPMILUR_IP;
+$port= SETTINGS_APPMILUR_PORT;
+   $socket = socket_create(AF_INET, SOCK_STREAM, getprotobyname("tcp"));  // Create Socket
+        if (socket_connect($socket, $host, $port)) {  //Connect
+
+if ($enabledebug==1) {$debug.='Socket сonnected '.$host.'('. $port.')<br>';}
+
+
+//$objname='current';         
+$objname=SETTINGS_APPMILUR_MODEL;
+
+addClassObject('Milur',$objname);
+
+sg($objname.".t1",SETTINGS_APPMILUR_T1);
+sg($objname.".t2",SETTINGS_APPMILUR_T2);
+
+//sg($objname.".lasttimestamp",gg($objname.".timestamp"));                    
+
+         
+         
+//circle 1
+        $sendStr = 'ff 08 00 ff ff ff ff ff ff 4f 2d';  // 16 hexadecimal data
+        $sendStrArray = str_split(str_replace(' ', '', $sendStr), 2);  // The 16 binary data into a set of two arrays
+     
+                      for ($j = 0; $j <count ($sendStrArray); $j++) {
+                              socket_write ($socket, Chr (hexdec ($sendStrArray[$j])));   // by group data transmission
+            }
+            $receiveStr = "";
+            $receiveStr = socket_read($socket, 1024, PHP_BINARY_READ);  // The 2 band data received 
+                      $receiveStrHex = bin2hex ($receiveStr);   // the 2 hexadecimal data convert 16 hex
+
+if ($enabledebug==1) {
+$debug.="cicle 1 connect<br>";
+$debug.=" send:".$sendStr."<br>" ; 
+//$debug.=" answer:" . $receiveStr."<br>";   
+//$debug.=" answerSTR:" .hex2str($receiveStrHex)."<br>";
+$debug.=" answerHEX:" . $receiveStrHex.'<br>';
+}
+//echo $debug;
+
+
+         
+       //цикл 2
+         
+        $sendStr = 'ff 01 20 41 b8';  // модель
+        $sendStrArray = str_split(str_replace(' ', '', $sendStr), 2);  // The 16 binary data into a set of two arrays
+     
+                      for ($j = 0; $j <count ($sendStrArray); $j++) {
+                              socket_write ($socket, Chr (hexdec ($sendStrArray[$j])));   // by group data transmission
+            }
+
+            $receiveStr = "";
+            $receiveStr = socket_read($socket, 1024, PHP_BINARY_READ);  // The 2 band data received 
+                      $receiveStrHex = bin2hex ($receiveStr);   // the 2 hexadecimal data convert 16 hex
+if ($enabledebug==1) {
+$debug.="cicle 2 model:<br>";
+$debug.="send:".$sendStr ."<br>"; 
+//$debug.="answer:" . $receiveStr."<br>";   
+//$debug.="answerSTR:" .hex2str($receiveStrHex)."<br>";
+$debug.="answerHEX:" . $receiveStrHex.'<br>';
+}
+
+if ($receiveStr<>0)        sg($objname.".model",$receiveStr);  
+if ($receiveStr<>0) sg($objname.".timestamp",time());            
+ 
+
+socket_close($socket);  // Close Socket       
+if ($enabledebug==1) {$debug.='Socked closed.<br>';}
+
+
+        } 
+else 
+{
+if ($enabledebug==1) {$debug='Error create socket '.$host.'('. $port.')';}
+}
+     socket_close($socket);  // Close Socket       
+if ($enabledebug==1) {
+SQLexec("update milur_config set value='$debug' where parametr='DEBUG'");	    
+sg($objname.'.debug',$debug);}
+
+
+
+SQLexec("update milur_config set value=UNIX_TIMESTAMP() where parametr='LASTCYCLE_TS'");		   
+SQLexec("update milur_config set value=now() where parametr='LASTCYCLE_TXT'");		   	   
+
+ }
+
+
+//////////////////////////////////////////////
+//////////////////////////////////////////////
+//////////////////////////////////////////////
+//////////////////////////////////////////////
+//////////////////////////////////////////////
+//////////////////////////////////////////////
+
+
+ function getcounters() {
+
+$enabledebug=SETTINGS_APPMILUR_ENABLEDEBUG;
+SQLexec("update milur_config set value='' where parametr='DEBUG'");	    
+
+if ($enabledebug==1) {$debug=date('m/d/Y H:i:s', time())."<br>";}
+
+$host= SETTINGS_APPMILUR_IP;
+$port= SETTINGS_APPMILUR_PORT;
+   $socket = socket_create(AF_INET, SOCK_STREAM, getprotobyname("tcp"));  // Create Socket
+        if (socket_connect($socket, $host, $port)) {  //Connect
+
+if ($enabledebug==1) {$debug.='Socket сonnected '.$host.'('. $port.')<br>';}
+
+
+//$objname='current';         
+$objname=SETTINGS_APPMILUR_MODEL;
+
+addClassObject('Milur',$objname);
+
+sg($objname.".t1",SETTINGS_APPMILUR_T1);
+sg($objname.".t2",SETTINGS_APPMILUR_T2);
+
+//sg($objname.".lasttimestamp",gg($objname.".timestamp"));                    
+
+         
+         
+//circle 1
+        $sendStr = 'ff 08 00 ff ff ff ff ff ff 4f 2d';  // 16 hexadecimal data
+        $sendStrArray = str_split(str_replace(' ', '', $sendStr), 2);  // The 16 binary data into a set of two arrays
+     
+                      for ($j = 0; $j <count ($sendStrArray); $j++) {
+                              socket_write ($socket, Chr (hexdec ($sendStrArray[$j])));   // by group data transmission
+            }
+            $receiveStr = "";
+            $receiveStr = socket_read($socket, 1024, PHP_BINARY_READ);  // The 2 band data received 
+                      $receiveStrHex = bin2hex ($receiveStr);   // the 2 hexadecimal data convert 16 hex
+
+if ($enabledebug==1) {
+$debug.="cicle 1 connect<br>";
+$debug.=" send:".$sendStr."<br>" ; 
+//$debug.=" answer:" . $receiveStr."<br>";   
+//$debug.=" answerSTR:" .hex2str($receiveStrHex)."<br>";
+$debug.=" answerHEX:" . $receiveStrHex.'<br>';
+}
+//echo $debug;
+
+         //цикл 5 счетчик общий
+        $sendStr = 'ff 01 04 41 a3';  // S0
+        $sendStrArray = str_split(str_replace(' ', '', $sendStr), 2);  // The 16 binary data into a set of two arrays
+     
+                      for ($j = 0; $j <count ($sendStrArray); $j++) {
+                              socket_write ($socket, Chr (hexdec ($sendStrArray[$j])));   // by group data transmission
+            }
+            $receiveStr = "";
+            $receiveStr = socket_read($socket, 1024, PHP_BINARY_READ);  // The 2 band data received 
+                      $receiveStrHex = bin2hex ($receiveStr);   // the 2 hexadecimal data convert 16 hex
+       
+$s0hex=substr($receiveStrHex,12,2).substr($receiveStrHex,10,2).substr($receiveStrHex,8,2);
+$s0=hexdec($s0hex)/1000;       
+
+//джоули в ват/часы
+///1 J = 0.00027777777777778 Wh
+$sk0=$s0*0.00027777777777778;         
+// echo  "S0:".$sendStr ; 
+if ($enabledebug==1) {
+$debug.="cicle 5 S0:<br>";
+//$debug.= " answer:" . $receiveStr;   
+//$debug.= " answerSTR:" .hex2str($receiveStrHex);
+$debug.= " answerHEX:" . $receiveStrHex.'<br>';    
+$debug.= " answerS0HEX:" . $s1hex.'<br>';   
+$debug.= " answerS0:" . $s0.'<br>';
+$debug.= " answerSK0:" . $sk0.'<br>';                  
+}
+//           echo '<br>'; 
+            if ($s0<>0)    sg($objname.".S0",$s0);
+         
+//цикл 6 счетчик тариф 1
+        $sendStr = 'ff 01 05 80 63';  // S1
+        $sendStrArray = str_split(str_replace(' ', '', $sendStr), 2);  // The 16 binary data into a set of two arrays
+     
+                      for ($j = 0; $j <count ($sendStrArray); $j++) {
+                              socket_write ($socket, Chr (hexdec ($sendStrArray[$j])));   // by group data transmission
+            }
+            $receiveStr = "";
+            $receiveStr = socket_read($socket, 1024, PHP_BINARY_READ);  // The 2 band data received 
+                      $receiveStrHex = bin2hex ($receiveStr);   // the 2 hexadecimal data convert 16 hex
+       
+$s1hex=substr($receiveStrHex,12,2).substr($receiveStrHex,10,2).substr($receiveStrHex,8,2);
+$s1=hexdec($s1hex)/1000;       
+$sk1=$s1*0.00027777777777778;         
+// echo  "S1:".$sendStr ; 
+if ($enabledebug==1) {
+$debug.="cicle 6.1 S1:<br>";
+//$debug.= " answer:" . $receiveStr;   
+//$debug.= " answerSTR:" .hex2str($receiveStrHex);
+$debug.= " answerHEX:" . $receiveStrHex.'<br>';    
+$debug.= " answerS1HEX:" . $s1hex.'<br>';   
+$debug.= " answerS1:" . $s1.'<br>';
+$debug.= " answerSK1:" . $sk1.'<br>';                  
+}
+//echo           '<br>'; 
+if ($s1<>0)    sg($objname.".S1",$s1);         
+if ($s1hex<>0)    sg($objname."S1hex",$s1hex);          
+         
+//цикл 6 счетчик тариф 2
+        $sendStr = 'ff 01 06 c0 62';  // S2
+        $sendStrArray = str_split(str_replace(' ', '', $sendStr), 2);  // The 16 binary data into a set of two arrays
+     
+                      for ($j = 0; $j <count ($sendStrArray); $j++) {
+                              socket_write ($socket, Chr (hexdec ($sendStrArray[$j])));   // by group data transmission
+            }
+            $receiveStr = "";
+            $receiveStr = socket_read($socket, 1024, PHP_BINARY_READ);  // The 2 band data received 
+                      $receiveStrHex = bin2hex ($receiveStr);   // the 2 hexadecimal data convert 16 hex
+       
+$s2hex=substr($receiveStrHex,12,2).substr($receiveStrHex,10,2).substr($receiveStrHex,8,2);
+$s2=hexdec($s2hex)/1000;  
+
+//джоули в ват/часы
+///1 J = 0.00027777777777778 Wh
+   
+$sk2=$s2*0.00027777777777778;
+// echo  "S2:".$sendStr ; 
+if ($enabledebug==1) {
+$debug.="cicle 6.2 S2:<br>";
+//$debug.= " answer:" . $receiveStr;   
+//$debug.= " answerSTR:" .hex2str($receiveStrHex);
+$debug.= " answerHEX:" . $receiveStrHex.'<br>';    
+$debug.= " answerS2HEX:" . $s2hex.'<br>';   
+$debug.= " answerS2:" . $s2.'<br>';
+$debug.= " answerSK2:" . $sk2.'<br>';         
+}
+//echo '<br>'; 
+if ($s2<>0)    sg($objname.".S2",$s2);                  
+if ($s2hex<>0) sg($objname.".S2hex",$s2hex);            
+
+
+socket_close($socket);  // Close Socket       
+if ($enabledebug==1) {$debug.='Socked closed.<br>';}
+
+
+        } 
+else 
+{
+if ($enabledebug==1) {$debug='Error create socket '.$host.'('. $port.')';}
+}
+     socket_close($socket);  // Close Socket       
+if ($enabledebug==1) {
+SQLexec("update milur_config set value='$debug' where parametr='DEBUG'");	    
+sg($objname.'.debug',$debug);}
+}
 
 
 /**
