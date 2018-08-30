@@ -218,6 +218,22 @@ function checkSettings() {
     'DEFAULT'=>'milur104',
     'DATA'=>'milur104=Milur 104|milur307=Milur 307'
     )
+
+ ,  array(
+    'NAME'=>'APPMILUR_T1', 
+    'TITLE'=>'Tariff 1, RUB',
+    'TYPE'=>'text',
+    'DEFAULT'=>'2.99'
+
+    )
+ ,  array(
+    'NAME'=>'APPMILUR_T2', 
+    'TITLE'=>'Tariff 2, RUB',
+    'TYPE'=>'text',
+    'DEFAULT'=>'1.42'
+
+    )
+
 	  
 	  
 ,array(	  
@@ -302,7 +318,12 @@ if ($enabledebug==1) {$debug.='Socket сonnected '.$host.'('. $port.')<br>';}
 $objname=SETTINGS_APPMILUR_MODEL;
 
 addClassObject('Milur',$objname);
+
+sg($objname.".t1",SETTINGS_APPMILUR_T1);
+sg($objname.".t2",SETTINGS_APPMILUR_T2);
+
 sg($objname.".lasttimestamp",gg($objname.".timestamp"));                    
+
          
          
 //circle 1
