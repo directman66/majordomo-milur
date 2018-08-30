@@ -505,7 +505,7 @@ $debug.= " answerSK2:" . $sk2.'<br>';
 }
 //echo '<br>'; 
 if ($s2<>0)    sg($objname.".S2",$s2);                  
-if ($s2hex<>0) sg($objname.".S1hex",$s2hex);            
+if ($s2hex<>0) sg($objname.".S2hex",$s2hex);            
 
 
 socket_close($socket);  // Close Socket       
