@@ -322,7 +322,7 @@ addClassObject('Milur',$objname);
 sg($objname.".t1",SETTINGS_APPMILUR_T1);
 sg($objname.".t2",SETTINGS_APPMILUR_T2);
 
-sg($objname.".lasttimestamp",gg($objname.".timestamp"));                    
+//sg($objname.".lasttimestamp",gg($objname.".timestamp"));                    
 
          
          
@@ -672,14 +672,14 @@ $classname='Milur';
 addClass($classname); 
 addClassMethod($classname,'OnChange',$onChange);	 
 
-$prop_id=addClassProperty($classname, 'I', 30);
+$prop_id=addClassProperty($classname, 'I', 100);
 if ($prop_id) {
 $property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
 $property['DESCRIPTION']='Сила тока'; //   <-----------
 SQLUpdate('properties',$property);} 
 
 
-$prop_id=addClassProperty($classname, 'P', 30);
+$prop_id=addClassProperty($classname, 'P', 100);
 if ($prop_id) {
 $property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
 $property['DESCRIPTION']='Мгновенная потребляемая мощность'; //   <-----------
@@ -717,27 +717,27 @@ $property['DESCRIPTION']='Тарифная ставка по тарифу 2, р�
 SQLUpdate('properties',$property);} 
 
 
-$prop_id=addClassProperty($classname, 'timestamp', 30);
+$prop_id=addClassProperty($classname, 'timestamp', 1);
 if ($prop_id) {
 $property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
 $property['DESCRIPTION']='timestamp'; //   <-----------
 SQLUpdate('properties',$property);} 
 
-$prop_id=addClassProperty($classname, 'U', 30);
+$prop_id=addClassProperty($classname, 'U', 60);
 if ($prop_id) {
 $property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
 $property['DESCRIPTION']='Мгновенное напряжение'; //   <-----------
 $property['ONCHANGE']="OnChange"; //	   	       
 SQLUpdate('properties',$property);} 
 
-$prop_id=addClassProperty($classname, 'potrebleno_w', 90);
+$prop_id=addClassProperty($classname, 'potrebleno_w', 1000);
 if ($prop_id) {
 $property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
 $property['DESCRIPTION']='Потреблено ват всего, с точностью до минут'; //   <-----------
 $property['ONCHANGE']=""; //	   	       
 SQLUpdate('properties',$property);} 
 
-$prop_id=addClassProperty($classname, 'potrebleno_ws', 90);
+$prop_id=addClassProperty($classname, 'potrebleno_ws', 1000);
 if ($prop_id) {
 $property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
 $property['DESCRIPTION']='Потреблено ват всего, с точностью до секунд'; //   <-----------
@@ -745,49 +745,49 @@ $property['ONCHANGE']=""; //
 SQLUpdate('properties',$property);} 
 
 
-$prop_id=addClassProperty($classname, 'potrebleno_w_rub', 90);
+$prop_id=addClassProperty($classname, 'potrebleno_w_rub', 1000);
 if ($prop_id) {
 $property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
 $property['DESCRIPTION']='Израсходовано руб.'; //   <-----------
 $property['ONCHANGE']=""; //	   	       
 SQLUpdate('properties',$property);} 
 
-$prop_id=addClassProperty($classname, 'potrebleno_w_t1', 30);
+$prop_id=addClassProperty($classname, 'potrebleno_w_t1', 1000);
 if ($prop_id) {
 $property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
 $property['DESCRIPTION']='потреблено по тарифу 1'; //   <-----------
 $property['ONCHANGE']=""; //	   	       
 SQLUpdate('properties',$property);} 
 
-$prop_id=addClassProperty($classname, 'potrebleno_w_t2', 30);
+$prop_id=addClassProperty($classname, 'potrebleno_w_t2', 1000);
 if ($prop_id) {
 $property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
 $property['DESCRIPTION']='потреблено по тарифу 2'; //   <-----------
 $property['ONCHANGE']=""; //	   	       
 SQLUpdate('properties',$property);} 
 
-$prop_id=addClassProperty($classname, 'potrebleno_w_t1_rub', 100);
+$prop_id=addClassProperty($classname, 'potrebleno_w_t1_rub', 1000);
 if ($prop_id) {
 $property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
 $property['DESCRIPTION']='Израсходовано по тарифу 1'; //   <-----------
 $property['ONCHANGE']=""; //	   	       
 SQLUpdate('properties',$property);} 
 
-$prop_id=addClassProperty($classname, 'potrebleno_w_t2_rub', 100);
+$prop_id=addClassProperty($classname, 'potrebleno_w_t2_rub', 1000);
 if ($prop_id) {
 $property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
 $property['DESCRIPTION']='Израсходовано по тарифу 2'; //   <-----------
 $property['ONCHANGE']=""; //	   	       
 SQLUpdate('properties',$property);} 
 
-$prop_id=addClassProperty($classname, 'proshlo_min', 100);
+$prop_id=addClassProperty($classname, 'proshlo_min', 1);
 if ($prop_id) {
 $property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
 $property['DESCRIPTION']='Отрезок времени в мин с последнего снятия показаний'; //   <-----------
 $property['ONCHANGE']=""; //	   	       
 SQLUpdate('properties',$property);} 
 
-$prop_id=addClassProperty($classname, 'proshlo_sec', 100);
+$prop_id=addClassProperty($classname, 'proshlo_sec', 1);
 if ($prop_id) {
 $property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
 $property['DESCRIPTION']='Отрезок времени в сек. с последнего снятия показаний'; //   <-----------
@@ -810,28 +810,15 @@ $property['DESCRIPTION']='Потреблено суммарно по тариф�
 $property['ONCHANGE']=""; //	   	       
 SQLUpdate('properties',$property);} 
 
-$prop_id=addClassProperty($classname, 'lastpm', 0);
+
+$prop_id=addClassProperty($classname, 'lastph', 1);
 if ($prop_id) {
 $property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']='Текущий расход ват в минуту'; //   <-----------
+$property['DESCRIPTION']='Расход ват в момент предыдущего замера'; //   <-----------
 $property['ONCHANGE']=""; //	   	       
 SQLUpdate('properties',$property);} 
 
-$prop_id=addClassProperty($classname, 'lastps', 0);
-if ($prop_id) {
-$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']='Текущий расход ват в секунду'; //   <-----------
-$property['ONCHANGE']=""; //	   	       
-SQLUpdate('properties',$property);} 
-
-$prop_id=addClassProperty($classname, 'lastph', 0);
-if ($prop_id) {
-$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']='Текущий расход ват в час'; //   <-----------
-$property['ONCHANGE']=""; //	   	       
-SQLUpdate('properties',$property);} 
-
-$prop_id=addClassProperty($classname, 'tarif ', 0);
+$prop_id=addClassProperty($classname, 'tarif ', 1);
 if ($prop_id) {
 $property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
 $property['DESCRIPTION']='Текущий тариф'; //   <-----------
