@@ -308,9 +308,16 @@ $latest=$cmd_rec['VALUE'];
    if ($tdev < 0) {$has = true;}
    
    if ($has) {  
-$this->getdata();   
+$this->getpu();   
   } 
   }
+
+//////////////////////////////////////////////
+//////////////////////////////////////////////
+//////////////////////////////////////////////
+//////////////////////////////////////////////
+//////////////////////////////////////////////
+//////////////////////////////////////////////
 
 
  function getdata() {
@@ -333,8 +340,12 @@ $objname=SETTINGS_APPMILUR_MODEL;
 
 addClassObject('Milur',$objname);
 
-sg($objname.".t1",SETTINGS_APPMILUR_T1);
-sg($objname.".t2",SETTINGS_APPMILUR_T2);
+$t1=gg($objname.".t1");
+$t2=gg($objname.".t2");
+if (!isset($t1)) {sg($objname.".t1",SETTINGS_APPMILUR_T1);}
+if (!isset($t2)) {sg($objname.".t2",SETTINGS_APPMILUR_T1);}
+//if (!isset(gg($objname.".t1"))) {sg($objname.".t1",SETTINGS_APPMILUR_T1);}
+//if (isset(gg($objname.".t2"))) {sg($objname.".t2",SETTINGS_APPMILUR_T2);}
 
 //sg($objname.".lasttimestamp",gg($objname.".timestamp"));                    
 
@@ -548,6 +559,7 @@ sg($objname.'.debug',$debug);}
 SQLexec("update milur_config set value=UNIX_TIMESTAMP() where parametr='LASTCYCLE_TS'");		   
 SQLexec("update milur_config set value=now() where parametr='LASTCYCLE_TXT'");		   	   
 
+
  }
 
 
@@ -580,8 +592,11 @@ $objname=SETTINGS_APPMILUR_MODEL;
 
 addClassObject('Milur',$objname);
 
-sg($objname.".t1",SETTINGS_APPMILUR_T1);
-sg($objname.".t2",SETTINGS_APPMILUR_T2);
+
+$t1=gg($objname.".t1");
+$t2=gg($objname.".t2");
+if (!isset($t1)) {sg($objname.".t1",SETTINGS_APPMILUR_T1);}
+if (!isset($t2)) {sg($objname.".t2",SETTINGS_APPMILUR_T1);}
 
 //sg($objname.".lasttimestamp",gg($objname.".timestamp"));                    
 
@@ -714,8 +729,10 @@ $objname=SETTINGS_APPMILUR_MODEL;
 
 addClassObject('Milur',$objname);
 
-sg($objname.".t1",SETTINGS_APPMILUR_T1);
-sg($objname.".t2",SETTINGS_APPMILUR_T2);
+$t1=gg($objname.".t1");
+$t2=gg($objname.".t2");
+if (!isset($t1)) {sg($objname.".t1",SETTINGS_APPMILUR_T1);}
+if (!isset($t2)) {sg($objname.".t2",SETTINGS_APPMILUR_T1);}
 
 //sg($objname.".lasttimestamp",gg($objname.".timestamp"));                    
 
@@ -817,8 +834,10 @@ $objname=SETTINGS_APPMILUR_MODEL;
 
 addClassObject('Milur',$objname);
 
-sg($objname.".t1",SETTINGS_APPMILUR_T1);
-sg($objname.".t2",SETTINGS_APPMILUR_T2);
+$t1=gg($objname.".t1");
+$t2=gg($objname.".t2");
+if (!isset($t1)) {sg($objname.".t1",SETTINGS_APPMILUR_T1);}
+if (!isset($t2)) {sg($objname.".t2",SETTINGS_APPMILUR_T1);}
 
 //sg($objname.".lasttimestamp",gg($objname.".timestamp"));                    
 
@@ -1238,7 +1257,7 @@ $property['DESCRIPTION']='Расход ват в момент предыдуще
 $property['ONCHANGE']=""; //	   	       
 SQLUpdate('properties',$property);} 
 
-$prop_id=addClassProperty($classname, 'tarif ', 1);
+$prop_id=addClassProperty($classname, 'tarif', 1);
 if ($prop_id) {
 $property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
 $property['DESCRIPTION']='Текущий тариф'; //   <-----------
