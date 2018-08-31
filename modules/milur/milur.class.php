@@ -882,11 +882,14 @@ $debug.=" answerHEX:" . $receiveStrHex.'<br>';
                       $receiveStrHex = bin2hex ($receiveStr);   // the 2 hexadecimal data convert 16 hex
        
 $s0hex=substr($receiveStrHex,12,2).substr($receiveStrHex,10,2).substr($receiveStrHex,8,2);
-$s0=hexdec($s0hex)/1000;       
+
+$s0=strrev($s0hex);
+
+//$s0=hexdec($s0hex)/1000;       
 
 //джоули в ват/часы
 ///1 J = 0.00027777777777778 Wh
-$sk0=$s0*0.00027777777777778;         
+//$sk0=$s0*0.00027777777777778;         
 // echo  "S0:".$sendStr ; 
 if ($enabledebug==1) {
 $debug.="cicle 5 S0:<br>";
@@ -898,7 +901,7 @@ $debug.= " answerS0:" . $s0.'<br>';
 $debug.= " answerSK0:" . $sk0.'<br>';                  
 }
 //           echo '<br>'; 
-            if ($s0<>0)    sg($objname.".S0",$s0);
+if ($s0<>0)    {sg($objname.".S0",$s0); sg($objname.".countersts",time());                 }
          
 //цикл 6 счетчик тариф 1
         $sendStr = 'ff 01 05 80 63';  // S1
@@ -912,8 +915,11 @@ $debug.= " answerSK0:" . $sk0.'<br>';
                       $receiveStrHex = bin2hex ($receiveStr);   // the 2 hexadecimal data convert 16 hex
        
 $s1hex=substr($receiveStrHex,12,2).substr($receiveStrHex,10,2).substr($receiveStrHex,8,2);
-$s1=hexdec($s1hex)/1000;       
-$sk1=$s1*0.00027777777777778;         
+//$s1=hexdec($s1hex)/1000;       
+//$sk1=$s1*0.00027777777777778;         
+
+$s1=strrev($s1hex)/100;
+
 // echo  "S1:".$sendStr ; 
 if ($enabledebug==1) {
 $debug.="cicle 6.1 S1:<br>";
@@ -923,10 +929,14 @@ $debug.= " answerHEX:" . $receiveStrHex.'<br>';
 $debug.= " answerS1HEX:" . $s1hex.'<br>';   
 $debug.= " answerS1:" . $s1.'<br>';
 $debug.= " answerSK1:" . $sk1.'<br>';                  
+$debug.= " answerS2hex:" . $receiveStrHex.'<br>';         
+sg($objname."S1hex",$receiveStrHex);          
+
 }
 //echo           '<br>'; 
-if ($s1<>0)    sg($objname.".S1",$s1);         
-if ($s1hex<>0)    sg($objname."S1hex",$s1hex);          
+if ($s1<>0) {  sg($objname.".S1",$s1); sg($objname.".countersts",time());                }         
+
+//if ($s1hex<>0)    sg($objname."S1hex",$s1hex);          
          
 //цикл 6 счетчик тариф 2
         $sendStr = 'ff 01 06 c0 62';  // S2
@@ -940,12 +950,14 @@ if ($s1hex<>0)    sg($objname."S1hex",$s1hex);
                       $receiveStrHex = bin2hex ($receiveStr);   // the 2 hexadecimal data convert 16 hex
        
 $s2hex=substr($receiveStrHex,12,2).substr($receiveStrHex,10,2).substr($receiveStrHex,8,2);
-$s2=hexdec($s2hex)/1000;  
+//$s2=hexdec($s2hex)/1000;  
+$s2=strrev($s2hex)/100;
+
 
 //джоули в ват/часы
 ///1 J = 0.00027777777777778 Wh
    
-$sk2=$s2*0.00027777777777778;
+//$sk2=$s2*0.00027777777777778;
 // echo  "S2:".$sendStr ; 
 if ($enabledebug==1) {
 $debug.="cicle 6.2 S2:<br>";
@@ -955,10 +967,13 @@ $debug.= " answerHEX:" . $receiveStrHex.'<br>';
 $debug.= " answerS2HEX:" . $s2hex.'<br>';   
 $debug.= " answerS2:" . $s2.'<br>';
 $debug.= " answerSK2:" . $sk2.'<br>';         
+$debug.= " answerS2hex:" . $receiveStrHex.'<br>';         
+sg($objname."S2hex",$receiveStrHex);          
 }
 //echo '<br>'; 
-if ($s2<>0)    sg($objname.".S2",$s2);                  
-if ($s2hex<>0) sg($objname.".S2hex",$s2hex);            
+
+if ($s2<>0)    {sg($objname.".S2",$s2); sg($objname.".countersts",time());                 }
+//if ($s2hex<>0) sg($objname.".S2hex",$s2hex);            
 
 
 socket_close($socket);  // Close Socket       
