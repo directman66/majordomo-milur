@@ -881,9 +881,11 @@ $debug.=" answerHEX:" . $receiveStrHex.'<br>';
             $receiveStr = socket_read($socket, 1024, PHP_BINARY_READ);  // The 2 band data received 
                       $receiveStrHex = bin2hex ($receiveStr);   // the 2 hexadecimal data convert 16 hex
        
-$s0hex=substr($receiveStrHex,12,2).substr($receiveStrHex,10,2).substr($receiveStrHex,8,2);
+//$s0hex=substr($receiveStrHex,12,2).substr($receiveStrHex,10,2).substr($receiveStrHex,8,2);
+$s0hex=substr($receiveStrHex,7,8);
 
-$s0=strrev($s0hex);
+
+$s0=strrev($s0hex)/1000;
 
 //$s0=hexdec($s0hex)/1000;       
 
@@ -913,12 +915,13 @@ if ($s0<>0)    {sg($objname.".S0",$s0); sg($objname.".countersts",time());      
             $receiveStr = "";
             $receiveStr = socket_read($socket, 1024, PHP_BINARY_READ);  // The 2 band data received 
                       $receiveStrHex = bin2hex ($receiveStr);   // the 2 hexadecimal data convert 16 hex
-       
-$s1hex=substr($receiveStrHex,12,2).substr($receiveStrHex,10,2).substr($receiveStrHex,8,2);
+//$receiveStrHex=ff 01 05 04 56 59 16 00 21a1       
+//$s1hex=substr($receiveStrHex,12,2).substr($receiveStrHex,10,2).substr($receiveStrHex,8,2);
+$s1hex=substr($receiveStrHex,7,8);
 //$s1=hexdec($s1hex)/1000;       
 //$sk1=$s1*0.00027777777777778;         
 
-$s1=strrev($s1hex)/100;
+$s1=strrev($s1hex)/1000;
 
 // echo  "S1:".$sendStr ; 
 if ($enabledebug==1) {
@@ -949,9 +952,10 @@ if ($s1<>0) {  sg($objname.".S1",$s1); sg($objname.".countersts",time());       
             $receiveStr = socket_read($socket, 1024, PHP_BINARY_READ);  // The 2 band data received 
                       $receiveStrHex = bin2hex ($receiveStr);   // the 2 hexadecimal data convert 16 hex
        
-$s2hex=substr($receiveStrHex,12,2).substr($receiveStrHex,10,2).substr($receiveStrHex,8,2);
+//$s2hex=substr($receiveStrHex,12,2).substr($receiveStrHex,10,2).substr($receiveStrHex,8,2);
+$s2hex=substr($receiveStrHex,7,8);
 //$s2=hexdec($s2hex)/1000;  
-$s2=strrev($s2hex)/100;
+$s2=strrev($s2hex)/1000;
 
 
 //джоули в ват/часы
