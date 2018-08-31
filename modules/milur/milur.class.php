@@ -134,6 +134,8 @@ function admin(&$out) {
  $out['MODEL']=SETTINGS_APPMILUR_MODEL;		
 
  $out['TS']=date('m/d/Y H:i:s',gg(SETTINGS_APPMILUR_MODEL.".timestamp"));		
+ $out['COUNTTS']=date('m/d/Y H:i:s',gg(SETTINGS_APPMILUR_MODEL.".countersts"));		
+
  $out['P']=gg(SETTINGS_APPMILUR_MODEL.".P");		
  $out['U']=gg(SETTINGS_APPMILUR_MODEL.".U");		
  $out['I']=gg(SETTINGS_APPMILUR_MODEL.".I");		
@@ -495,8 +497,9 @@ $debug.= " answerSK0:" . $sk0.'<br>';
                       $receiveStrHex = bin2hex ($receiveStr);   // the 2 hexadecimal data convert 16 hex
        
 $s1hex=substr($receiveStrHex,12,2).substr($receiveStrHex,10,2).substr($receiveStrHex,8,2);
-$s1=hexdec($s1hex)/1000;       
-$sk1=$s1*0.00027777777777778;         
+$s1=strrev($s1hex);
+//hexdec($s1hex)/1000;       
+//$sk1=$s1*0.00027777777777778;         
 // echo  "S1:".$sendStr ; 
 if ($enabledebug==1) {
 $debug.="cicle 6.1 S1:<br>";
@@ -523,12 +526,12 @@ if ($s1hex<>0)    sg($objname."S1hex",$s1hex);
                       $receiveStrHex = bin2hex ($receiveStr);   // the 2 hexadecimal data convert 16 hex
        
 $s2hex=substr($receiveStrHex,12,2).substr($receiveStrHex,10,2).substr($receiveStrHex,8,2);
-$s2=hexdec($s2hex)/1000;  
-
+//$s2=hexdec($s2hex)/1000;  
+$s2=strrev($s2hex);
 //джоули в ват/часы
 ///1 J = 0.00027777777777778 Wh
    
-$sk2=$s2*0.00027777777777778;
+//$sk2=$s2*0.00027777777777778;
 // echo  "S2:".$sendStr ; 
 if ($enabledebug==1) {
 $debug.="cicle 6.2 S2:<br>";
@@ -540,7 +543,7 @@ $debug.= " answerS2:" . $s2.'<br>';
 $debug.= " answerSK2:" . $sk2.'<br>';         
 }
 //echo '<br>'; 
-if ($s2<>0)    sg($objname.".S2",$s2);                  
+if ($s2<>0)    {sg($objname.".S2",$s2); sg($objname.".countersts",time());                 }
 if ($s2hex<>0) sg($objname.".S2hex",$s2hex);            
 
 
