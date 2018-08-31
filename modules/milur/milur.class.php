@@ -1131,22 +1131,22 @@ $property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
 $property['DESCRIPTION']='Мгновенная потребляемая мощность'; //   <-----------
 SQLUpdate('properties',$property);} 
 
-$prop_id=addClassProperty($classname, 'S1', 0);
+$prop_id=addClassProperty($classname, 'S1', 1000);
 if ($prop_id) {
 $property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']='Значение счеткика тариф 1'; //   <-----------
+$property['DESCRIPTION']='Значение счетчика тариф 1'; //   <-----------
 SQLUpdate('properties',$property);} 
 
-$prop_id=addClassProperty($classname, 'S2', 0);
+$prop_id=addClassProperty($classname, 'S2', 1000);
 if ($prop_id) {
 $property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']='Значение счеткика тариф 2'; //   <-----------
+$property['DESCRIPTION']='Значение счетчика тариф 2'; //   <-----------
 SQLUpdate('properties',$property);} 
 
-$prop_id=addClassProperty($classname, 'S0', 0);
+$prop_id=addClassProperty($classname, 'S0', 1000);
 if ($prop_id) {
 $property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']='Значение счеткика, общее'; //   <-----------
+$property['DESCRIPTION']='Значение счетчика, общее'; //   <-----------
 SQLUpdate('properties',$property);} 
 
 
