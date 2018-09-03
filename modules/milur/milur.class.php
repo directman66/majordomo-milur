@@ -325,9 +325,9 @@ if ($enable==1) {$this->getpu();   }
 //////////////////////////////////////////////
 //////////////////////////////////////////////
  function getdata() {
-//getinfo2();
-//getpu();
-//getcounters();
+getinfo2();
+getpu();
+getcounters();
 }
 
 
@@ -343,7 +343,7 @@ if ($enable==1) {$this->getpu();   }
 //////////////////////////////////////////////
 //////////////////////////////////////////////
  function getpu() {
-/*
+
 $enabledebug=SETTINGS_APPMILUR_ENABLEDEBUG;
 SQLexec("update milur_config set value='' where parametr='DEBUG'");	    
 
@@ -466,7 +466,6 @@ sg($objname.'.debug',$debug);}
 
 SQLexec("update milur_config set value=UNIX_TIMESTAMP() where parametr='LASTCYCLE_TS'");		   
 SQLexec("update milur_config set value=now() where parametr='LASTCYCLE_TXT'");		   	   
-	 */
 
  }
 
@@ -481,7 +480,6 @@ SQLexec("update milur_config set value=now() where parametr='LASTCYCLE_TXT'");
 //////////////////////////////////////////////
 //////////////////////////////////////////////
  function getinfo2() {
-/*
 $enabledebug=SETTINGS_APPMILUR_ENABLEDEBUG;
 SQLexec("update milur_config set value='' where parametr='DEBUG'");	    
 
@@ -524,7 +522,7 @@ if ($enabledebug==1) {
 $debug.="cicle 1 connect<br>";
 $debug.=" send:".$sendStr."<br>" ; 
 //$debug.=" answer:" . $receiveStr."<br>";   
-//$debug.=" answerSTR:" .hex2str($receiveStrHex)."<br>";
+//$debug.=" answerSTR:" .hex2str2($receiveStrHex)."<br>";
 $debug.=" answerHEX:" . $receiveStrHex.'<br>';
 }
 //echo $debug;
@@ -547,7 +545,7 @@ if ($enabledebug==1) {
 $debug.="cicle 2 model:<br>";
 $debug.="send:".$sendStr ."<br>"; 
 //$debug.="answer:" . $receiveStr."<br>";   
-//$debug.="answerSTR:" .hex2str($receiveStrHex)."<br>";
+//$debug.="answerSTR:" .hex2str2($receiveStrHex)."<br>";
 $debug.="answerHEX:" . $receiveStrHex.'<br>';
 }
 
@@ -573,7 +571,6 @@ sg($objname.'.debug',$debug);}
 
 SQLexec("update milur_config set value=UNIX_TIMESTAMP() where parametr='LASTCYCLE_TS'");		   
 SQLexec("update milur_config set value=now() where parametr='LASTCYCLE_TXT'");		   	   
-*/
 
  }
 
@@ -587,7 +584,7 @@ SQLexec("update milur_config set value=now() where parametr='LASTCYCLE_TXT'");
 
 
  function getcounters() {
-/*
+
 $enabledebug=SETTINGS_APPMILUR_ENABLEDEBUG;
 SQLexec("update milur_config set value='' where parametr='DEBUG'");	    
 
@@ -630,7 +627,7 @@ if ($enabledebug==1) {
 $debug.="cicle 1 connect<br>";
 $debug.=" send:".$sendStr."<br>" ; 
 //$debug.=" answer:" . $receiveStr."<br>";   
-//$debug.=" answerSTR:" .hex2str($receiveStrHex)."<br>";
+//$debug.=" answerSTR:" .hex2str2($receiveStrHex)."<br>";
 $debug.=" answerHEX:" . $receiveStrHex.'<br>';
 }
 //echo $debug;
@@ -661,7 +658,7 @@ $s0=strrev($s0hex)/1000;
 if ($enabledebug==1) {
 $debug.="cicle 5 S0:<br>";
 //$debug.= " answer:" . $receiveStr;   
-//$debug.= " answerSTR:" .hex2str($receiveStrHex);
+//$debug.= " answerSTR:" .hex2str2($receiveStrHex);
 $debug.= " answerHEX:" . $receiveStrHex.'<br>';    
 $debug.= " answerS0HEX:" . $s1hex.'<br>';   
 $debug.= " answerS0:" . $s0.'<br>';
@@ -692,7 +689,7 @@ $s1=strrev($s1hex)/1000;
 if ($enabledebug==1) {
 $debug.="cicle 6.1 S1:<br>";
 //$debug.= " answer:" . $receiveStr;   
-//$debug.= " answerSTR:" .hex2str($receiveStrHex);
+//$debug.= " answerSTR:" .hex2str2($receiveStrHex);
 $debug.= " answerHEX:" . $receiveStrHex.'<br>';    
 $debug.= " answerS1HEX:" . $s1hex.'<br>';   
 $debug.= " answerS1:" . $s1.'<br>';
@@ -731,7 +728,7 @@ $s2=strrev($s2hex)/1000;
 if ($enabledebug==1) {
 $debug.="cicle 6.2 S2:<br>";
 //$debug.= " answer:" . $receiveStr;   
-//$debug.= " answerSTR:" .hex2str($receiveStrHex);
+//$debug.= " answerSTR:" .hex2str2($receiveStrHex);
 $debug.= " answerHEX:" . $receiveStrHex.'<br>';    
 $debug.= " answerS2HEX:" . $s2hex.'<br>';   
 $debug.= " answerS2:" . $s2.'<br>';
@@ -759,7 +756,6 @@ if ($enabledebug==1) {
 SQLexec("update milur_config set value='$debug' where parametr='DEBUG'");	    
 sg($objname.'.debug',$debug);}
 
-*/
 }
 
 
