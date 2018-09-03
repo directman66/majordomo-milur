@@ -778,6 +778,14 @@ sg($objname.'.debug',$debug);}
 *
 * @access private
 */
+
+function processSubscription($event_name, $details='') {
+  if ($event_name=='HOURLY') {
+		$this->getcounters();
+  }
+ }
+
+
  function install($data='') {
   parent::install();
  }
