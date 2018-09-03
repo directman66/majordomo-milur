@@ -586,7 +586,7 @@ SQLexec("update milur_config set value=now() where parametr='LASTCYCLE_TXT'");
 
 
  function getcounters() {
-
+/*
 $enabledebug=SETTINGS_APPMILUR_ENABLEDEBUG;
 SQLexec("update milur_config set value='' where parametr='DEBUG'");	    
 
@@ -757,6 +757,8 @@ if ($enabledebug==1) {$debug='Error create socket '.$host.'('. $port.')';}
 if ($enabledebug==1) {
 SQLexec("update milur_config set value='$debug' where parametr='DEBUG'");	    
 sg($objname.'.debug',$debug);}
+
+*/
 }
 
 
