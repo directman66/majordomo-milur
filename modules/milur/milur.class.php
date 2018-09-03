@@ -789,6 +789,7 @@ function processSubscription($event_name, $details='') {
 
 
  function install($data='') {
+subscribeToEvent($this->name, 'HOURLY');
   parent::install();
  }
 /**
