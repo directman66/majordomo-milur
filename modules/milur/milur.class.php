@@ -1098,7 +1098,7 @@ SQLInsert('milur_config', $par);
 // --------------------------------------------------------------------
 	
 
-function strToHex($string){
+function strToHex2($string){
     $hex='';
     for ($i=0; $i < strlen($string); $i++){
         $hex .= dechex(ord($string[$i]));
@@ -1107,7 +1107,7 @@ function strToHex($string){
 }
 
 
-function hexToStr($hex){
+function hexToStr2($hex){
     $string='';
     for ($i=0; $i < strlen($hex)-1; $i+=2){
         $string .= chr(hexdec($hex[$i].$hex[$i+1]));
@@ -1115,7 +1115,7 @@ function hexToStr($hex){
     return $string;
 }
 
-function hex2str($hex) {
+function hex2str2($hex) {
     $str = '';
     for($i=0;$i<strlen($hex);$i+=2) $str .= chr(hexdec(substr($hex,$i,2)));
     return $str;
