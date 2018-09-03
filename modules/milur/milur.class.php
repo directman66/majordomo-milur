@@ -1099,7 +1099,7 @@ SQLInsert('milur_config', $par);
 }
 // --------------------------------------------------------------------
 	
-
+/*
 function strToHex($string){
     $hex='';
     for ($i=0; $i < strlen($string); $i++){
@@ -1122,6 +1122,7 @@ function hex2str($hex) {
     for($i=0;$i<strlen($hex);$i+=2) $str .= chr(hexdec(substr($hex,$i,2)));
     return $str;
 }	
+*/
 
 /*
 *
