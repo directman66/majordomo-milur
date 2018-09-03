@@ -343,7 +343,7 @@ if ($enable==1) {$this->getpu();   }
 //////////////////////////////////////////////
 //////////////////////////////////////////////
  function getpu() {
-
+/*
 $enabledebug=SETTINGS_APPMILUR_ENABLEDEBUG;
 SQLexec("update milur_config set value='' where parametr='DEBUG'");	    
 
@@ -466,6 +466,7 @@ sg($objname.'.debug',$debug);}
 
 SQLexec("update milur_config set value=UNIX_TIMESTAMP() where parametr='LASTCYCLE_TS'");		   
 SQLexec("update milur_config set value=now() where parametr='LASTCYCLE_TXT'");		   	   
+	 */
 
  }
 
@@ -801,9 +802,6 @@ SQLExec("delete from properties where object_id in (select id from objects where
 SQLExec("delete from objects where class_id = (select id from classes where title = 'Milur')");
 SQLExec("delete from methods where class_id = (select id from classes where title = 'Milur')");	 
 SQLExec("delete from classes where title = 'Milur'");	 
-
-
-
   parent::uninstall();
  }
 /**
