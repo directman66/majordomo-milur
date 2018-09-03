@@ -180,7 +180,7 @@ if ($this->view_mode=='getinfo') {
 $this->getinfo2();
 }  
 
-if ($this->view_mode=='getipu') {
+if ($this->view_mode=='getpu') {
 $this->getpu();
 }  
 
@@ -480,7 +480,7 @@ SQLexec("update milur_config set value=now() where parametr='LASTCYCLE_TXT'");
 //////////////////////////////////////////////
 //////////////////////////////////////////////
  function getinfo2() {
-
+/*
 $enabledebug=SETTINGS_APPMILUR_ENABLEDEBUG;
 SQLexec("update milur_config set value='' where parametr='DEBUG'");	    
 
@@ -572,6 +572,7 @@ sg($objname.'.debug',$debug);}
 
 SQLexec("update milur_config set value=UNIX_TIMESTAMP() where parametr='LASTCYCLE_TS'");		   
 SQLexec("update milur_config set value=now() where parametr='LASTCYCLE_TXT'");		   	   
+*/
 
  }
 
