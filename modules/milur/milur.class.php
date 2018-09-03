@@ -325,8 +325,8 @@ if ($enable==1) {$this->getpu();   }
 //////////////////////////////////////////////
 //////////////////////////////////////////////
  function getdata() {
-getinfo2();
-getpu();
+//getinfo2();
+//getpu();
 //getcounters();
 }
 
