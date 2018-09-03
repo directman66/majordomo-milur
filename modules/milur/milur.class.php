@@ -757,6 +757,12 @@ SQLexec("update milur_config set value='$debug' where parametr='DEBUG'");
 sg($objname.'.debug',$debug);}
 
 }
+	
+function processSubscription($event_name, $details='') {
+  if ($event_name=='HOURLY') {
+		$this->getcounters();
+  }
+ }	
 
 
 /**
@@ -779,11 +785,7 @@ sg($objname.'.debug',$debug);}
 * @access private
 */
 
-function processSubscription($event_name, $details='') {
-  if ($event_name=='HOURLY') {
-		$this->getcounters();
-  }
- }
+
 
 
  function install($data='') {
