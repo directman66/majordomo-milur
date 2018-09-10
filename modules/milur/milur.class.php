@@ -19,7 +19,7 @@ class milur extends module {
 */
 function milur() {
   $this->name="milur";
-  $this->title="Милур";
+  $this->title="Счетчики Милур";
   $this->module_category="<#LANG_SECTION_DEVICES#>";
   $this->checkInstalled();
 }
