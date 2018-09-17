@@ -937,14 +937,14 @@ SQLUpdate('properties',$property);}
 
 
 
-$prop_id=addClassProperty($classname, 'rashodt1', 365);
+$prop_id=addClassProperty($classname, 'rashodt1', 1000);
 if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
 $property['DESCRIPTION']='Израсходовано по тарифу 1'; //   <-----------
 SQLUpdate('properties',$property); }
 
-$prop_id=addClassProperty($classname, 'rashodt2', 365);
+$prop_id=addClassProperty($classname, 'rashodt2', 1000);
 if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']='Израсходовано по тарифу 1'; //   <-----------
+$property['DESCRIPTION']='Израсходовано по тарифу 2'; //   <-----------
 SQLUpdate('properties',$property); }
 
 
