@@ -825,7 +825,7 @@ $objn=$this->object_title;
 $currentcount=$this->getProperty("S1");
 $lasttotal=gg($objn.".lasts1");
 
-SQLUpdate("objects", array("ID"=>$this->id, "DESCRIPTION"=>gg($objn.".FIO")." P:".gg($objn.".PvT")." U:".gg($objn.".U")." ".gg("sysdate")."  ".gg("timenow"))); 
+SQLUpdate("objects", array("ID"=>$this->id, "DESCRIPTION"=>gg($objn.".FIO")." P:".gg($objn.".P")." U:".gg($objn.".U")." ".gg("sysdate")."  ".gg("timenow"))); 
 if (IsSet($lasttotal) and ($lasttotal<>0) )
 {
 $rashod=$currentcount-$lasttotal;
