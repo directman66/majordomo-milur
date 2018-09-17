@@ -1,4 +1,4 @@
-7<?php
+<?php
 /**
 * milur 
 * @package project
@@ -839,7 +839,8 @@ SQLExec("delete from classes where title = 'Milur'");
 
 $ChangeT1='
 $objn=$this->object_title;
-$currentcount=$this->getProperty("S1");
+//$currentcount=$this->getProperty("S1");
+$currentcount=gg($objn.".S1");
 $lasttotal=gg($objn.".lasts1");
 
 SQLUpdate("objects", array("ID"=>$this->id, "DESCRIPTION"=>gg($objn.".FIO")." P:".gg($objn.".P")." U:".gg($objn.".U")." ".gg("sysdate")."  ".gg("timenow"))); 
@@ -853,7 +854,8 @@ sg($objn.".lasttimestamp", time());
 sg($objn.".lasts1", $currentcount);';
 $ChangeT2='
 $objn=$this->object_title;
-$currentcount=$this->getProperty("S2");
+//$currentcount=$this->getProperty("S2");
+$currentcount=gg($objn.".S2");
 $lasttotal=gg($objn.".lasts2");
 
 SQLUpdate("objects", array("ID"=>$this->id, "DESCRIPTION"=>gg($objn.".FIO")." P:".gg($objn.".PvT")." U:".gg($objn.".U")." ".gg("sysdate")."  ".gg("timenow"))); 
