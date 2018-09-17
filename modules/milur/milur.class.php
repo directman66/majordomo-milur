@@ -1,4 +1,4 @@
-<?php
+7<?php
 /**
 * milur 
 * @package project
@@ -351,8 +351,15 @@ if ($enabledebug==1) {$debug=date('m/d/Y H:i:s', time())."<br>";}
 
 $host= SETTINGS_APPMILUR_IP;
 $port= SETTINGS_APPMILUR_PORT;
-   $socket = socket_create(AF_INET, SOCK_STREAM, getprotobyname("tcp"));  // Create Socket
+//   $socket = socket_create(AF_INET, SOCK_STREAM, getprotobyname("tcp"));  // Create Socket
+$socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+socket_set_option($socket,SOL_SOCKET, SO_RCVTIMEO, array("sec"=>5, "usec"=>0));
+
+
         if (socket_connect($socket, $host, $port)) {  //Connect
+
+
+
 
 if ($enabledebug==1) {$debug.='Socket сonnected '.$host.'('. $port.')<br>';}
 
@@ -487,7 +494,12 @@ if ($enabledebug==1) {$debug=date('m/d/Y H:i:s', time())."<br>";}
 
 $host= SETTINGS_APPMILUR_IP;
 $port= SETTINGS_APPMILUR_PORT;
-   $socket = socket_create(AF_INET, SOCK_STREAM, getprotobyname("tcp"));  // Create Socket
+//   $socket = socket_create(AF_INET, SOCK_STREAM, getprotobyname("tcp"));  // Create Socket
+$socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+socket_set_option($socket,SOL_SOCKET, SO_RCVTIMEO, array("sec"=>5, "usec"=>0));
+
+
+
         if (socket_connect($socket, $host, $port)) {  //Connect
 
 if ($enabledebug==1) {$debug.='Socket сonnected '.$host.'('. $port.')<br>';}
@@ -592,7 +604,12 @@ if ($enabledebug==1) {$debug=date('m/d/Y H:i:s', time())."<br>";}
 
 $host= SETTINGS_APPMILUR_IP;
 $port= SETTINGS_APPMILUR_PORT;
-   $socket = socket_create(AF_INET, SOCK_STREAM, getprotobyname("tcp"));  // Create Socket
+//   $socket = socket_create(AF_INET, SOCK_STREAM, getprotobyname("tcp"));  // Create Socket
+
+$socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+socket_set_option($socket,SOL_SOCKET, SO_RCVTIMEO, array("sec"=>5, "usec"=>0));
+
+
         if (socket_connect($socket, $host, $port)) {  //Connect
 
 if ($enabledebug==1) {$debug.='Socket сonnected '.$host.'('. $port.')<br>';}
@@ -852,12 +869,18 @@ sg($objn.".lasts2", $currentcount);
 
 
 
+$onChange='
+$objn=$this->object_title;
+$i=gg($objn.".P")/gg($objn.".U");
+sg($objn.".I",  round($i,2));
+';
 
 setGlobal('cycle_milurAutoRestart','1');	 	 
 $classname='Milur';
 addClass($classname); 
 addClassMethod($classname,'ChangeT1',$ChangeT1);	 
 addClassMethod($classname,'ChangeT2',$ChangeT2);	 
+addClassMethod($classname,'onChange',$onChange);	 
 
 
 
@@ -895,18 +918,6 @@ $property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
 $property['DESCRIPTION']='Значение счетчика, общее'; //   <-----------
 SQLUpdate('properties',$property);} 
 
-
-$prop_id=addClassProperty($classname, 't1', 0);
-if ($prop_id) {
-$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']='Тарифная ставка по тарифу 1, руб.'; //   <-----------
-SQLUpdate('properties',$property);} 
-
-$prop_id=addClassProperty($classname, 't2', 0);
-if ($prop_id) {
-$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']='Тарифная ставка по тарифу 2, руб.'; //   <-----------
-SQLUpdate('properties',$property);} 
 
 
 $prop_id=addClassProperty($classname, 'timestamp', 1);
