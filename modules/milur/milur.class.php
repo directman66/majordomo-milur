@@ -410,7 +410,7 @@ $debug.=" answerHEX:" . $receiveStrHex.'<br>';
                               socket_write ($socket, Chr (hexdec ($sendStrArray[$j])));   // by group data transmission
             }
             $receiveStr = "";
-            $receiveStr = socket_read($socket, 1024, PHP_BINARY_READ);  // The 2 band data received 
+            $receiveStr = socket_read($socket, 2048);  // The 2 band data received 
                       $receiveStrHex = bin2hex ($receiveStr);   // the 2 hexadecimal data convert 16 hex
         
 $phex=substr($receiveStrHex,12,2).substr($receiveStrHex,10,2).substr($receiveStrHex,8,2);
@@ -438,7 +438,7 @@ $debug.=    " answerP:" . $p.'<br>';
                               socket_write ($socket, Chr (hexdec ($sendStrArray[$j])));   // by group data transmission
             }
             $receiveStr = "";
-            $receiveStr = socket_read($socket, 1024, PHP_BINARY_READ);  // The 2 band data received 
+            $receiveStr = socket_read($socket, 2048);  // The 2 band data received 
                       $receiveStrHex = bin2hex ($receiveStr);   // the 2 hexadecimal data convert 16 hex
        
 $uhex=substr($receiveStrHex,12,2).substr($receiveStrHex,10,2).substr($receiveStrHex,8,2);
