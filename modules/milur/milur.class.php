@@ -856,7 +856,11 @@ sg($objn.".lasts2", $currentcount);
 setGlobal('cycle_milurAutoRestart','1');	 	 
 $classname='Milur';
 addClass($classname); 
-addClassMethod($classname,'OnChange',$onChange);	 
+addClassMethod($classname,'ChangeT1',$ChangeT1);	 
+addClassMethod($classname,'ChangeT2',$ChangeT2);	 
+
+
+
 
 $prop_id=addClassProperty($classname, 'I', 100);
 if ($prop_id) {
