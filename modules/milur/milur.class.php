@@ -133,7 +133,7 @@ function admin(&$out) {
  $this->getConfig();
  $out['MODEL']=SETTINGS_APPMILUR_MODEL;		
 
- $out['TS']=date('m/d/Y H:i:s',gg(SETTINGS_APPMILUR_MODEL.".timestamp"));		
+ $out['TS']=date('m/d/Y H:i:s',gg(SETTINGS_APPMILUR_MODEL.".lasttimestamp"));		
  $out['COUNTTS']=date('m/d/Y H:i:s',gg(SETTINGS_APPMILUR_MODEL.".countersts"));		
 
  $out['P']=gg(SETTINGS_APPMILUR_MODEL.".P");		
