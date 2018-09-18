@@ -148,17 +148,17 @@ function admin(&$out) {
 
 $now=date();
 
-$out['MONTH_WATT']=round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.rashod1', $now-2629743 ,$now))+round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.rashod1', $now-2629743 ,$now));
-$out['MONTH_RUB']=(round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.rashod1', $now-2629743 ,$now)*SETTINGS_APPMILUR_T2))+(round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.rashod1', $now-2629743 ,$now)*SETTINGS_APPMILUR_T2));
+$out['MONTH_WATT']=round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.rashodt1', $now-2629743 ,$now))+round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.rashodt2', $now-2629743 ,$now));
+$out['MONTH_RUB']=(round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.rashodt1', $now-2629743 ,$now)*SETTINGS_APPMILUR_T1))+(round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.rashodt2', $now-2629743 ,$now)*SETTINGS_APPMILUR_T2));
 
-$out['DAY_WATT']=round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.rashod1', $now-86400 ,$now))+round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.rashod2', $now-86400 ,$now));
-$out['DAY_RUB']=(round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.rashod1', $now-86400 ,$now)*SETTINGS_APPMILUR_T2))+(round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.rashod1', $now-86400 ,$now)*SETTINGS_APPMILUR_T2));
+$out['DAY_WATT']=round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.rashodt1', $now-86400 ,$now))+round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.rashodt2', $now-86400 ,$now));
+$out['DAY_RUB']=(round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.rashodt1', $now-86400 ,$now)*SETTINGS_APPMILUR_T1))+(round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.rashodt2', $now-86400 ,$now)*SETTINGS_APPMILUR_T2));
 
-$out['WEEK_WATT']=round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.rashod1', $now-604800 ,$now))+round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.rashod2', $now-604800 ,$now));
-$out['WEEK_RUB']=(round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.rashod1', $now-604800 ,$now)*SETTINGS_APPMILUR_T2))+(round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.rashod1', $now-604800 ,$now)*SETTINGS_APPMILUR_T2));
+$out['WEEK_WATT']=round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.rashodt1', $now-604800 ,$now))+round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.rashodt2', $now-604800 ,$now));
+$out['WEEK_RUB']=(round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.rashodt1', $now-604800 ,$now)*SETTINGS_APPMILUR_T1))+(round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.rashodt2', $now-604800 ,$now)*SETTINGS_APPMILUR_T2));
 
-$out['YEAR_WATT']=round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.rashod1', $now-31556926 ,$now))+round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.rashod2', $now-31556926 ,$now));
-$out['YEAR_RUB']=(round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.rashod1', $now-31556926 ,$now)*SETTINGS_APPMILUR_T2))+(round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.rashod1', $now-31556926 ,$now)*SETTINGS_APPMILUR_T2));
+$out['YEAR_WATT']=round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.rashodt1', $now-31556926 ,$now))+round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.rashodt2', $now-31556926 ,$now));
+$out['YEAR_RUB']=(round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.rashodt1', $now-31556926 ,$now)*SETTINGS_APPMILUR_T1))+(round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.rashodt2', $now-31556926 ,$now)*SETTINGS_APPMILUR_T2));
 
 
 $cmd_rec = SQLSelectOne("SELECT VALUE FROM milur_config where parametr='DEBUG'");
@@ -937,14 +937,14 @@ SQLUpdate('properties',$property);}
 
 
 
-$prop_id=addClassProperty($classname, 'rashodt1', 1000);
+$prop_id=addClassProperty($classname, 'rashodt1', 365);
 if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
 $property['DESCRIPTION']='Израсходовано по тарифу 1'; //   <-----------
 SQLUpdate('properties',$property); }
 
-$prop_id=addClassProperty($classname, 'rashodt2', 1000);
+$prop_id=addClassProperty($classname, 'rashodt2', 365);
 if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']='Израсходовано по тарифу 2'; //   <-----------
+$property['DESCRIPTION']='Израсходовано по тарифу 1'; //   <-----------
 SQLUpdate('properties',$property); }
 
 
