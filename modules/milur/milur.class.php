@@ -373,7 +373,7 @@ addClassObject('Milur',$objname);
 $t1=gg($objname.".t1");
 $t2=gg($objname.".t2");
 if (!isset($t1)) {sg($objname.".t1",SETTINGS_APPMILUR_T1);}
-if (!isset($t2)) {sg($objname.".t2",SETTINGS_APPMILUR_T1);}
+if (!isset($t2)) {sg($objname.".t2",SETTINGS_APPMILUR_T2);}
 
 //sg($objname.".lasttimestamp",gg($objname.".timestamp"));                    
 
