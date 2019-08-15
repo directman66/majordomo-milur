@@ -19,7 +19,7 @@ class milur extends module {
 */
 function milur() {
   $this->name="milur";
-  $this->title="Счетчики Милур";
+  $this->title="РЎС‡РµС‚С‡РёРєРё РњРёР»СѓСЂ";
   $this->module_category="<#LANG_SECTION_DEVICES#>";
   $this->checkInstalled();
 }
@@ -131,6 +131,8 @@ function admin(&$out) {
 		}
 
  $this->getConfig();
+
+ $out['TYPE']=$this->type;			
  $out['MODEL']=SETTINGS_APPMILUR_MODEL;		
 
  $out['TS']=date('m/d/Y H:i:s',gg(SETTINGS_APPMILUR_MODEL.".lasttimestamp"));		
@@ -146,7 +148,7 @@ function admin(&$out) {
  $out['S1']=gg(SETTINGS_APPMILUR_MODEL.".S1");		
  $out['S2']=gg(SETTINGS_APPMILUR_MODEL.".S2");		
 
-$now=date();
+$now=time();
 
 $out['MONTH_WATT']=round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.rashodt1', $now-2629743 ,$now))+round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.rashodt2', $now-2629743 ,$now));
 $out['MONTH_RUB']=(round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.rashodt1', $now-2629743 ,$now)*SETTINGS_APPMILUR_T1))+(round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.rashodt2', $now-2629743 ,$now)*SETTINGS_APPMILUR_T2));
@@ -197,9 +199,18 @@ $this->getpu();
 *
 * @access public
 */
+
 function usual(&$out) {
+
+
+ if ($this->owner->action=='apps') {
+  $this->redirect(ROOTHTML."module/".$this->name.".html");
+//  $this->redirect(ROOTHTML."module/nick7zmail.html");
+ } else 
  $this->admin($out);
 }
+
+
 /**
 * milur_devices search
 *
@@ -361,7 +372,7 @@ socket_set_option($socket,SOL_SOCKET, SO_RCVTIMEO, array("sec"=>5, "usec"=>0));
 
 
 
-if ($enabledebug==1) {$debug.='Socket сonnected '.$host.'('. $port.')<br>';}
+if ($enabledebug==1) {$debug.='Socket СЃonnected '.$host.'('. $port.')<br>';}
 
 
 //$objname='current';         
@@ -402,7 +413,7 @@ $debug.=" answerHEX:" . $receiveStrHex.'<br>';
 
          
  
-//цикл 3
+//С†РёРєР» 3
         $sendStr = 'ff 01 03 00 61';  // P
         $sendStrArray = str_split(str_replace(' ', '', $sendStr), 2);  // The 16 binary data into a set of two arrays
      
@@ -430,7 +441,7 @@ $debug.=    " answerP:" . $p.'<br>';
 
          
     
-     //цикл 4
+     //С†РёРєР» 4
         $sendStr = 'ff 01 01 81 a0 ';  // U
         $sendStrArray = str_split(str_replace(' ', '', $sendStr), 2);  // The 16 binary data into a set of two arrays
      
@@ -502,7 +513,7 @@ socket_set_option($socket,SOL_SOCKET, SO_RCVTIMEO, array("sec"=>5, "usec"=>0));
 
         if (socket_connect($socket, $host, $port)) {  //Connect
 
-if ($enabledebug==1) {$debug.='Socket сonnected '.$host.'('. $port.')<br>';}
+if ($enabledebug==1) {$debug.='Socket СЃonnected '.$host.'('. $port.')<br>';}
 
 
 //$objname='current';         
@@ -541,9 +552,9 @@ $debug.=" answerHEX:" . $receiveStrHex.'<br>';
 
 
          
-       //цикл 2
+       //С†РёРєР» 2
          
-        $sendStr = 'ff 01 20 41 b8';  // модель
+        $sendStr = 'ff 01 20 41 b8';  // РјРѕРґРµР»СЊ
         $sendStrArray = str_split(str_replace(' ', '', $sendStr), 2);  // The 16 binary data into a set of two arrays
      
                       for ($j = 0; $j <count ($sendStrArray); $j++) {
@@ -612,7 +623,7 @@ socket_set_option($socket,SOL_SOCKET, SO_RCVTIMEO, array("sec"=>5, "usec"=>0));
 
         if (socket_connect($socket, $host, $port)) {  //Connect
 
-if ($enabledebug==1) {$debug.='Socket сonnected '.$host.'('. $port.')<br>';}
+if ($enabledebug==1) {$debug.='Socket СЃonnected '.$host.'('. $port.')<br>';}
 
 
 //$objname='current';         
@@ -649,7 +660,7 @@ $debug.=" answerHEX:" . $receiveStrHex.'<br>';
 }
 //echo $debug;
 
-         //цикл 5 счетчик общий
+         //С†РёРєР» 5 СЃС‡РµС‚С‡РёРє РѕР±С‰РёР№
         $sendStr = 'ff 01 04 41 a3';  // S0
         $sendStrArray = str_split(str_replace(' ', '', $sendStr), 2);  // The 16 binary data into a set of two arrays
      
@@ -668,7 +679,7 @@ $s0=strrev($s0hex)/1000;
 
 //$s0=hexdec($s0hex)/1000;       
 
-//джоули в ват/часы
+//РґР¶РѕСѓР»Рё РІ РІР°С‚/С‡Р°СЃС‹
 ///1 J = 0.00027777777777778 Wh
 //$sk0=$s0*0.00027777777777778;         
 // echo  "S0:".$sendStr ; 
@@ -684,7 +695,7 @@ $debug.= " answerSK0:" . $sk0.'<br>';
 //           echo '<br>'; 
 if ($s0<>0)    {sg($objname.".S0",$s0); sg($objname.".countersts",time());                 }
          
-//цикл 6 счетчик тариф 1
+//С†РёРєР» 6 СЃС‡РµС‚С‡РёРє С‚Р°СЂРёС„ 1
         $sendStr = 'ff 01 05 80 63';  // S1
         $sendStrArray = str_split(str_replace(' ', '', $sendStr), 2);  // The 16 binary data into a set of two arrays
      
@@ -720,7 +731,7 @@ if ($s1<>0) {  sg($objname.".S1",$s1); sg($objname.".countersts",time());       
 
 //if ($s1hex<>0)    sg($objname."S1hex",$s1hex);          
          
-//цикл 6 счетчик тариф 2
+//С†РёРєР» 6 СЃС‡РµС‚С‡РёРє С‚Р°СЂРёС„ 2
         $sendStr = 'ff 01 06 c0 62';  // S2
         $sendStrArray = str_split(str_replace(' ', '', $sendStr), 2);  // The 16 binary data into a set of two arrays
      
@@ -737,7 +748,7 @@ $s2hex=substr($receiveStrHex,7,8);
 $s2=strrev($s2hex)/1000;
 
 
-//джоули в ват/часы
+//РґР¶РѕСѓР»Рё РІ РІР°С‚/С‡Р°СЃС‹
 ///1 J = 0.00027777777777778 Wh
    
 //$sk2=$s2*0.00027777777777778;
@@ -890,34 +901,34 @@ addClassMethod($classname,'onChange',$onChange);
 $prop_id=addClassProperty($classname, 'I', 100);
 if ($prop_id) {
 $property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']='Сила тока'; //   <-----------
+$property['DESCRIPTION']='РЎРёР»Р° С‚РѕРєР°'; //   <-----------
 SQLUpdate('properties',$property);} 
 
 
 $prop_id=addClassProperty($classname, 'P', 100);
 if ($prop_id) {
 $property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']='Мгновенная потребляемая мощность'; //   <-----------
+$property['DESCRIPTION']='РњРіРЅРѕРІРµРЅРЅР°СЏ РїРѕС‚СЂРµР±Р»СЏРµРјР°СЏ РјРѕС‰РЅРѕСЃС‚СЊ'; //   <-----------
 SQLUpdate('properties',$property);} 
 
 $prop_id=addClassProperty($classname, 'S1', 1000);
 if ($prop_id) {
 $property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']='Значение счетчика тариф 1'; //   <-----------
+$property['DESCRIPTION']='Р—РЅР°С‡РµРЅРёРµ СЃС‡РµС‚С‡РёРєР° С‚Р°СЂРёС„ 1'; //   <-----------
 $property['ONCHANGE']="ChangeT1"; //	   	       
 SQLUpdate('properties',$property);} 
 
 $prop_id=addClassProperty($classname, 'S2', 1000);
 if ($prop_id) {
 $property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']='Значение счетчика тариф 2'; //   <-----------
+$property['DESCRIPTION']='Р—РЅР°С‡РµРЅРёРµ СЃС‡РµС‚С‡РёРєР° С‚Р°СЂРёС„ 2'; //   <-----------
 $property['ONCHANGE']="ChangeT2"; //	   	       
 SQLUpdate('properties',$property);} 
 
 $prop_id=addClassProperty($classname, 'S0', 1000);
 if ($prop_id) {
 $property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']='Значение счетчика, общее'; //   <-----------
+$property['DESCRIPTION']='Р—РЅР°С‡РµРЅРёРµ СЃС‡РµС‚С‡РёРєР°, РѕР±С‰РµРµ'; //   <-----------
 SQLUpdate('properties',$property);} 
 
 
@@ -931,7 +942,7 @@ SQLUpdate('properties',$property);}
 $prop_id=addClassProperty($classname, 'U', 60);
 if ($prop_id) {
 $property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']='Мгновенное напряжение'; //   <-----------
+$property['DESCRIPTION']='РњРіРЅРѕРІРµРЅРЅРѕРµ РЅР°РїСЂСЏР¶РµРЅРёРµ'; //   <-----------
 $property['ONCHANGE']="OnChange"; //	   	       
 SQLUpdate('properties',$property);} 
 
@@ -939,12 +950,12 @@ SQLUpdate('properties',$property);}
 
 $prop_id=addClassProperty($classname, 'rashodt1', 365);
 if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']='Израсходовано по тарифу 1'; //   <-----------
+$property['DESCRIPTION']='РР·СЂР°СЃС…РѕРґРѕРІР°РЅРѕ РїРѕ С‚Р°СЂРёС„Сѓ 1'; //   <-----------
 SQLUpdate('properties',$property); }
 
 $prop_id=addClassProperty($classname, 'rashodt2', 365);
 if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']='Израсходовано по тарифу 1'; //   <-----------
+$property['DESCRIPTION']='РР·СЂР°СЃС…РѕРґРѕРІР°РЅРѕ РїРѕ С‚Р°СЂРёС„Сѓ 1'; //   <-----------
 SQLUpdate('properties',$property); }
 
 
