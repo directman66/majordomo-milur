@@ -19,7 +19,7 @@ class milur extends module {
 */
 function milur() {
   $this->name="milur";
-  $this->title="РЎС‡РµС‚С‡РёРєРё РњРёР»СѓСЂ";
+  $this->title="Счетчики Милур";
   $this->module_category="<#LANG_SECTION_DEVICES#>";
   $this->checkInstalled();
 }
@@ -552,7 +552,7 @@ $debug.=" answerHEX:" . $receiveStrHex.'<br>';
 
 
          
-       //С†РёРєР» 2
+       //цикл 2
          
         $sendStr = 'ff 01 20 41 b8';  // РјРѕРґРµР»СЊ
         $sendStrArray = str_split(str_replace(' ', '', $sendStr), 2);  // The 16 binary data into a set of two arrays
@@ -679,7 +679,7 @@ $s0=strrev($s0hex)/1000;
 
 //$s0=hexdec($s0hex)/1000;       
 
-//РґР¶РѕСѓР»Рё РІ РІР°С‚/С‡Р°СЃС‹
+//джоули в ват/часы
 ///1 J = 0.00027777777777778 Wh
 //$sk0=$s0*0.00027777777777778;         
 // echo  "S0:".$sendStr ; 
@@ -695,7 +695,7 @@ $debug.= " answerSK0:" . $sk0.'<br>';
 //           echo '<br>'; 
 if ($s0<>0)    {sg($objname.".S0",$s0); sg($objname.".countersts",time());                 }
          
-//С†РёРєР» 6 СЃС‡РµС‚С‡РёРє С‚Р°СЂРёС„ 1
+//цикл 6 счетчик тариф 1
         $sendStr = 'ff 01 05 80 63';  // S1
         $sendStrArray = str_split(str_replace(' ', '', $sendStr), 2);  // The 16 binary data into a set of two arrays
      
@@ -731,7 +731,7 @@ if ($s1<>0) {  sg($objname.".S1",$s1); sg($objname.".countersts",time());       
 
 //if ($s1hex<>0)    sg($objname."S1hex",$s1hex);          
          
-//С†РёРєР» 6 СЃС‡РµС‚С‡РёРє С‚Р°СЂРёС„ 2
+//цикл 6 счетчик тариф 2
         $sendStr = 'ff 01 06 c0 62';  // S2
         $sendStrArray = str_split(str_replace(' ', '', $sendStr), 2);  // The 16 binary data into a set of two arrays
      
@@ -901,34 +901,34 @@ addClassMethod($classname,'onChange',$onChange);
 $prop_id=addClassProperty($classname, 'I', 100);
 if ($prop_id) {
 $property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']='РЎРёР»Р° С‚РѕРєР°'; //   <-----------
+$property['DESCRIPTION']='Сила тока'; //   <-----------
 SQLUpdate('properties',$property);} 
 
 
 $prop_id=addClassProperty($classname, 'P', 100);
 if ($prop_id) {
 $property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']='РњРіРЅРѕРІРµРЅРЅР°СЏ РїРѕС‚СЂРµР±Р»СЏРµРјР°СЏ РјРѕС‰РЅРѕСЃС‚СЊ'; //   <-----------
+$property['DESCRIPTION']='Мгновенная потребляемая мощность'; //   <-----------
 SQLUpdate('properties',$property);} 
 
 $prop_id=addClassProperty($classname, 'S1', 1000);
 if ($prop_id) {
 $property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']='Р—РЅР°С‡РµРЅРёРµ СЃС‡РµС‚С‡РёРєР° С‚Р°СЂРёС„ 1'; //   <-----------
+$property['DESCRIPTION']='Значение счетчика тариф 1'; //   <-----------
 $property['ONCHANGE']="ChangeT1"; //	   	       
 SQLUpdate('properties',$property);} 
 
 $prop_id=addClassProperty($classname, 'S2', 1000);
 if ($prop_id) {
 $property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']='Р—РЅР°С‡РµРЅРёРµ СЃС‡РµС‚С‡РёРєР° С‚Р°СЂРёС„ 2'; //   <-----------
+$property['DESCRIPTION']='Значение счетчика тариф 2'; //   <-----------
 $property['ONCHANGE']="ChangeT2"; //	   	       
 SQLUpdate('properties',$property);} 
 
 $prop_id=addClassProperty($classname, 'S0', 1000);
 if ($prop_id) {
 $property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']='Р—РЅР°С‡РµРЅРёРµ СЃС‡РµС‚С‡РёРєР°, РѕР±С‰РµРµ'; //   <-----------
+$property['DESCRIPTION']='Значение счетчика, общее'; //   <-----------
 SQLUpdate('properties',$property);} 
 
 
@@ -942,7 +942,7 @@ SQLUpdate('properties',$property);}
 $prop_id=addClassProperty($classname, 'U', 60);
 if ($prop_id) {
 $property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']='РњРіРЅРѕРІРµРЅРЅРѕРµ РЅР°РїСЂСЏР¶РµРЅРёРµ'; //   <-----------
+$property['DESCRIPTION']='Мгновенное напряжение'; //   <-----------
 $property['ONCHANGE']="OnChange"; //	   	       
 SQLUpdate('properties',$property);} 
 
@@ -950,12 +950,12 @@ SQLUpdate('properties',$property);}
 
 $prop_id=addClassProperty($classname, 'rashodt1', 365);
 if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']='РР·СЂР°СЃС…РѕРґРѕРІР°РЅРѕ РїРѕ С‚Р°СЂРёС„Сѓ 1'; //   <-----------
+$property['DESCRIPTION']='Израсходовано по тарифу 1'; //   <-----------
 SQLUpdate('properties',$property); }
 
 $prop_id=addClassProperty($classname, 'rashodt2', 365);
 if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']='РР·СЂР°СЃС…РѕРґРѕРІР°РЅРѕ РїРѕ С‚Р°СЂРёС„Сѓ 1'; //   <-----------
+$property['DESCRIPTION']='Израсходовано по тарифу 2'; //   <-----------
 SQLUpdate('properties',$property); }
 
 
